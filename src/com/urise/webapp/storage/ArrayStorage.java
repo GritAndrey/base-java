@@ -24,7 +24,7 @@ public class ArrayStorage {
             System.out.println("Error: storage size exceeded");
             return;
         }
-        if (isPresent(r)) {
+        if (!isPresent(r)) {
             storage[size++] = r;
         } else {
             int index = findIndex(r.getUuid());
