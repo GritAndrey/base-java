@@ -24,7 +24,7 @@ public class ArrayStorage {
             System.out.println("Error: storage size exceeded");
             return;
         }
-        int index = findIndex(r.getUuid());
+        int index = getIndex(r.getUuid());
         boolean notPresent = index == -1;
         if (notPresent) {
             storage[size++] = r;
@@ -35,18 +35,17 @@ public class ArrayStorage {
 
     public Resume get(String uuid) {
         if (uuid == null) return null;
-        int index = findIndex(uuid);
-        boolean isPresent = index != -1;
-        if (isPresent) {
-            return storage[index];
+        int index = getIndex(uuid);
+        if (index == -1) {
+            System.out.println("Error: can`t find resume with uuid: " + uuid);
+            return null;
         }
-        System.out.println("Error: can`t find resume with uuid: " + uuid);
-        return null;
+        return storage[index];
     }
 
     public void delete(String uuid) {
         if (uuid == null) return;
-        int index = findIndex(uuid);
+        int index = getIndex(uuid);
         boolean isPresent = index != -1;
         if (isPresent) {
             System.arraycopy(storage, index + 1, storage, index, size - index - 1);
@@ -57,7 +56,7 @@ public class ArrayStorage {
 
     public void update(Resume r) {
         if (r == null) return;
-        int index = findIndex(r.getUuid());
+        int index = getIndex(r.getUuid());
         boolean isPresent = index != -1;
         if (isPresent) {
             storage[index] = r;
@@ -82,7 +81,7 @@ public class ArrayStorage {
         return size < MAX_CAPACITY;
     }
 
-    private int findIndex(String uuid) {
+    private int getIndex(String uuid) {
         return IntStream.range(0, size)
                 .filter(i -> storage[i].getUuid().equals(uuid))
                 .findFirst().orElse(-1);
