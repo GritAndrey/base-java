@@ -24,18 +24,20 @@ public class ArrayStorage {
             System.out.println("Error: storage size exceeded");
             return;
         }
-        if (!isPresent(r)) {
+        int index = findIndex(r.getUuid());
+        boolean notPresent = index == -1;
+        if (notPresent) {
             storage[size++] = r;
         } else {
-            int index = findIndex(r.getUuid());
-            System.out.println("This resume already present at position: " + index + 1);
+            System.out.println("This resume already present at position: " + (index + 1));
         }
     }
 
     public Resume get(String uuid) {
         if (uuid == null) return null;
         int index = findIndex(uuid);
-        if (isPresent(uuid)) {
+        boolean isPresent = index != -1;
+        if (isPresent) {
             return storage[index];
         }
         System.out.println("Error: can`t find resume with uuid: " + uuid);
@@ -45,7 +47,8 @@ public class ArrayStorage {
     public void delete(String uuid) {
         if (uuid == null) return;
         int index = findIndex(uuid);
-        if (isPresent(uuid)) {
+        boolean isPresent = index != -1;
+        if (isPresent) {
             System.arraycopy(storage, index + 1, storage, index, size - index - 1);
             size--;
         } else
@@ -55,7 +58,8 @@ public class ArrayStorage {
     public void update(Resume r) {
         if (r == null) return;
         int index = findIndex(r.getUuid());
-        if (isPresent(r)) {
+        boolean isPresent = index != -1;
+        if (isPresent) {
             storage[index] = r;
         } else {
             System.out.println("Error: can`t find resume: " + r);
@@ -83,13 +87,4 @@ public class ArrayStorage {
                 .filter(i -> storage[i].getUuid().equals(uuid))
                 .findFirst().orElse(-1);
     }
-
-    private boolean isPresent(Resume r) {
-        return findIndex(r.getUuid()) != -1;
-    }
-
-    private boolean isPresent(String uuid) {
-        return findIndex(uuid) != -1;
-    }
-
 }
