@@ -51,6 +51,7 @@ public abstract class AbstractArrayStorage implements Storage {
             System.out.println(ERROR_STORAGE_SIZE_EXCEEDED);
         } else {
             add(r, index);
+            size++;
         }
     }
 
