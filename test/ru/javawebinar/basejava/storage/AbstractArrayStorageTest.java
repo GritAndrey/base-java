@@ -3,14 +3,22 @@ package ru.javawebinar.basejava.storage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 public abstract class AbstractArrayStorageTest {
-    private final Storage storage;
+
+    protected final Storage storage;
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
+    private static final String UUID_4 = "uuid4";
+    private static final String DUMMY = "dummy";
+    private static Resume r1 = new Resume(UUID_1);
+    private static Resume r2 = new Resume(UUID_2);
+    private static Resume r3 = new Resume(UUID_3);
 
     public AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
@@ -19,46 +27,91 @@ public abstract class AbstractArrayStorageTest {
     @Before
     public void setUp() {
         storage.clear();
-        storage.save(new Resume(UUID_1));
-        storage.save(new Resume(UUID_2));
-        storage.save(new Resume(UUID_3));
+        storage.save(r1);
+        storage.save(r2);
+        storage.save(r3);
+    }
+
+    @Test(expected = StorageException.class)
+    public void storageSizeExceeded() {
+        try {
+            int limit = (int) storage.getClass().getSuperclass().getDeclaredField("STORAGE_LIMIT").get(storage);
+            for (int i = storage.size(); i < limit; i++) {
+                storage.save(new Resume(String.valueOf(i)));
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (StorageException e) {
+            Assert.fail("Incorrect storage limit");
+        }
+        storage.save(new Resume("final"));
     }
 
     @Test
     public void clear() {
+        storage.clear();
+        Assert.assertEquals(0, storage.size());
     }
 
     @Test
     public void update() {
+        Resume updatedResume = new Resume(UUID_1);
+        storage.update(updatedResume);
+        Assert.assertEquals(updatedResume, storage.get(UUID_1));
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void updateNotExist() {
+        storage.update(new Resume("dummy"));
     }
 
     @Test
     public void get() {
+        Assert.assertEquals(r1, storage.get(r1.getUuid()));
+        Assert.assertEquals(r2, storage.get(r2.getUuid()));
+        Assert.assertEquals(r3, storage.get(r3.getUuid()));
+
     }
 
     @Test(expected = NotExistStorageException.class)
     public void getNotExist() {
-        storage.get("dummy");
+        storage.get(DUMMY);
     }
 
     @Test
     public void save() {
+        Resume r4 = new Resume(UUID_4);
+        storage.save(r4);
+        Assert.assertEquals(4, storage.size());
+        Assert.assertEquals(r4, storage.get(r4.getUuid()));
     }
 
-    @Test
+    @Test(expected = ExistStorageException.class)
+    public void saveAlreadyExists() {
+        storage.save(new Resume(UUID_1));
+    }
+
+    @Test(expected = NotExistStorageException.class)
     public void delete() {
+        storage.delete(UUID_1);
+        storage.get(UUID_1);
+        Assert.assertEquals(2, storage.size());
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void deleteNotExist() {
+        storage.delete("dummy");
     }
 
     @Test
     public void getAll() {
+        Resume[] resumes = storage.getAll();
+        Assert.assertArrayEquals(new Resume[]{r1, r2, r3}, resumes);
+        Assert.assertEquals(3, resumes.length);
     }
 
     @Test
     public void size() {
         Assert.assertEquals(3, storage.size());
-    }
-
-    @Test
-    public void checkCapacity() {
     }
 }
