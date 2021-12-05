@@ -1,5 +1,8 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.exception.ExistStorageException;
+import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
@@ -9,9 +12,8 @@ import java.util.Arrays;
  */
 public abstract class AbstractArrayStorage implements Storage {
     protected static final int STORAGE_LIMIT = 10000;
-    protected static final String RESUME_ALREADY_EXIST_AT_POSITION = "Resume already exist at position: ";
-    protected static final String ERROR_STORAGE_SIZE_EXCEEDED = "Error: storage size exceeded";
-    protected static final String RESUME_NOT_EXIST = "Resume not exist: ";
+    private static final String ERROR_STORAGE_SIZE_EXCEEDED = "Error: storage size exceeded";
+
 
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
@@ -25,7 +27,7 @@ public abstract class AbstractArrayStorage implements Storage {
         if (r == null || r.getUuid() == null) return;
         int index = getIndex(r.getUuid());
         if (index < 0) {
-            System.out.println(RESUME_NOT_EXIST + r.getUuid());
+            throw new NotExistStorageException(r.getUuid());
         } else {
             storage[index] = r;
         }
@@ -35,8 +37,7 @@ public abstract class AbstractArrayStorage implements Storage {
         if (uuid == null) return null;
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.println(RESUME_NOT_EXIST + uuid);
-            return null;
+            throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
@@ -46,9 +47,9 @@ public abstract class AbstractArrayStorage implements Storage {
         if (r == null || r.getUuid() == null) return;
         int index = getIndex(r.getUuid());
         if (index >= 0) {
-            System.out.println(RESUME_ALREADY_EXIST_AT_POSITION + index + 1);
+            throw new ExistStorageException(r.getUuid());
         } else if (!checkCapacity()) {
-            System.out.println(ERROR_STORAGE_SIZE_EXCEEDED);
+            throw new StorageException(ERROR_STORAGE_SIZE_EXCEEDED, r.getUuid());
         } else {
             add(r, index);
             size++;
@@ -59,7 +60,7 @@ public abstract class AbstractArrayStorage implements Storage {
         if (uuid == null) return;
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.println(RESUME_NOT_EXIST + uuid);
+            throw new NotExistStorageException(uuid);
         } else {
             System.arraycopy(storage, index + 1, storage, index, size - index - 1);
             size--;
