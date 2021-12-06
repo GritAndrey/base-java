@@ -75,7 +75,7 @@ public abstract class AbstractArrayStorage implements Storage {
         return this.size;
     }
 
-    protected boolean checkCapacity() {
+    private boolean checkCapacity() {
         return size < STORAGE_LIMIT;
     }
 
