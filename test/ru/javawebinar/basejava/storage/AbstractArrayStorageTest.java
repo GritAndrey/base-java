@@ -8,6 +8,8 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
+import java.util.stream.IntStream;
+
 public abstract class AbstractArrayStorageTest {
 
     protected final Storage storage;
@@ -37,9 +39,8 @@ public abstract class AbstractArrayStorageTest {
         final String storageLimitFieldName = "STORAGE_LIMIT";
         try {
             int limit = (int) storage.getClass().getSuperclass().getDeclaredField(storageLimitFieldName).get(storage);
-            for (int i = storage.size(); i < limit; i++) {
-                storage.save(new Resume(String.valueOf(i)));
-            }
+            IntStream.range(storage.size(), limit)
+                    .forEach(i -> storage.save(new Resume(String.valueOf(i))));
         } catch (NoSuchFieldException e) {
             Assert.fail(storageLimitFieldName + " field not found in " + storage.getClass().getSuperclass().getSimpleName());
         } catch (StorageException e) {
@@ -89,7 +90,7 @@ public abstract class AbstractArrayStorageTest {
 
     @Test(expected = ExistStorageException.class)
     public void saveAlreadyExists() {
-        storage.save(new Resume(UUID_1));
+        storage.save(r1);
     }
 
     @Test(expected = NotExistStorageException.class)

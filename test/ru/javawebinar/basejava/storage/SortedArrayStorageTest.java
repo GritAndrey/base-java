@@ -10,7 +10,7 @@ public class SortedArrayStorageTest extends AbstractArrayStorageTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public  void positiveIndex() {
-        ((SortedArrayStorage) storage).add(new Resume(),1);
+    public void positiveIndex() {
+        ((SortedArrayStorage) storage).add(new Resume(), 1);
     }
 }
