@@ -35,14 +35,11 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Test(expected = StorageException.class)
-    public void storageSizeExceeded() throws IllegalAccessException {
-        final String storageLimitFieldName = "STORAGE_LIMIT";
+    public void storageOverflow() {
         try {
-            int limit = (int) storage.getClass().getSuperclass().getDeclaredField(storageLimitFieldName).get(storage);
+            int limit = AbstractArrayStorage.STORAGE_LIMIT;
             IntStream.range(storage.size(), limit)
                     .forEach(i -> storage.save(new Resume(String.valueOf(i))));
-        } catch (NoSuchFieldException e) {
-            Assert.fail(storageLimitFieldName + " field not found in " + storage.getClass().getSuperclass().getSimpleName());
         } catch (StorageException e) {
             Assert.fail("Incorrect storage limit");
         }
@@ -85,7 +82,7 @@ public abstract class AbstractArrayStorageTest {
         Resume r4 = new Resume(UUID_4);
         storage.save(r4);
         Assert.assertEquals(4, storage.size());
-        Assert.assertEquals(r4, storage.get(r4.getUuid()));
+        Assert.assertEquals(r4, storage.get(UUID_4));
     }
 
     @Test(expected = ExistStorageException.class)
@@ -107,9 +104,9 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void getAll() {
-        Resume[] resumes = storage.getAll();
-        Assert.assertArrayEquals(new Resume[]{r1, r2, r3}, resumes);
-        Assert.assertEquals(3, resumes.length);
+        Resume[] actualResumes = storage.getAll();
+        Assert.assertArrayEquals(new Resume[]{r1, r2, r3}, actualResumes);
+        Assert.assertEquals(3, actualResumes.length);
     }
 
     @Test
