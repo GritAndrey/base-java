@@ -56,7 +56,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected void makeDelete(String uuid, Integer key) {
+    protected void makeDelete(Integer key) {
         int index = key;
         System.arraycopy(storage, index + 1, storage, index, size - index - 1);
         size--;

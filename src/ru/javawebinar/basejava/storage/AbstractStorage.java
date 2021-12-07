@@ -48,7 +48,7 @@ public abstract class AbstractStorage<T> implements Storage {
         if (uuid == null) return;
         T key = getKey(uuid);
         if (isExist(key)) {
-            makeDelete(uuid, key);
+            makeDelete(key);
         } else {
             throw new NotExistStorageException(uuid);
         }
@@ -71,5 +71,5 @@ public abstract class AbstractStorage<T> implements Storage {
 
     protected abstract Resume makeGet(T key);
 
-    protected abstract void makeDelete(String uuid, T key);
+    protected abstract void makeDelete(T key);
 }
