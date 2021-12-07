@@ -2,13 +2,12 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
-
 import java.util.Arrays;
 
 /**
  * Array based storage for Resumes
  */
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_LIMIT = 10000;
     private static final String ERROR_STORAGE_SIZE_EXCEEDED = "Error: storage size exceeded";
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -32,42 +31,40 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object key) {
-
-        return (int) key >= 0;
+    protected boolean isExist(Integer key) {
+        return key >= 0;
     }
 
     @Override
-    protected Object getKey(String uuid) {
+    protected Integer getKey(String uuid) {
         return getIndex(uuid);
     }
 
     @Override
-    protected void update(Object key, Resume r) {
-        storage[(int) key] = r;
+    protected void makeUpdate(Integer key, Resume r) {
+        storage[key] = r;
     }
 
     @Override
-    protected void save(Resume r, Object key) {
+    protected void makeSave(Resume r, Integer key) {
         if (!checkCapacity()) {
             throw new StorageException(ERROR_STORAGE_SIZE_EXCEEDED, r.getUuid());
         }
-        add(r, (int) key);
+        add(r, key);
         size++;
 
     }
 
     @Override
-    protected void delete(String uuid, Object key) {
-        int index = (int) key;
+    protected void makeDelete(String uuid, Integer key) {
+        int index = key;
         System.arraycopy(storage, index + 1, storage, index, size - index - 1);
         size--;
     }
 
     @Override
-    protected Resume get(Object key) {
-        int index = (int) key;
-        return storage[index];
+    protected Resume makeGet(Integer key) {
+        return storage[key];
     }
 
     protected abstract void add(Resume r, int index);
