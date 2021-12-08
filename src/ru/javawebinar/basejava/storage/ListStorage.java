@@ -54,5 +54,4 @@ public class ListStorage extends AbstractStorage<Integer> {
     protected void makeDelete(Integer key) {
         storage.remove((int) key);
     }
-
 }
