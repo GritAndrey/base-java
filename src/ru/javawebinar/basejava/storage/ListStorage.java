@@ -1,6 +1,7 @@
 package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
+
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
@@ -38,7 +39,7 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected void makeSave(Resume r, Integer key) {
+    protected void makeSave(Integer key, Resume r) {
         storage.add(r);
     }
 

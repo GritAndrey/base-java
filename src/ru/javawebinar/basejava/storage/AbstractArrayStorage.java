@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
+
 import java.util.Arrays;
 
 /**
@@ -46,13 +47,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected void makeSave(Resume r, Integer key) {
+    protected void makeSave(Integer key, Resume r) {
         if (!checkCapacity()) {
             throw new StorageException(ERROR_STORAGE_SIZE_EXCEEDED, r.getUuid());
         }
         add(r, key);
         size++;
-
     }
 
     @Override

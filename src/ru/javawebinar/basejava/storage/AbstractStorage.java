@@ -1,6 +1,5 @@
 package ru.javawebinar.basejava.storage;
 
-
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
@@ -28,7 +27,7 @@ public abstract class AbstractStorage<T> implements Storage {
         if (isExist(key)) {
             throw new ExistStorageException(r.getUuid());
         } else {
-            makeSave(r, key);
+            makeSave(key, r);
         }
     }
 
@@ -67,7 +66,7 @@ public abstract class AbstractStorage<T> implements Storage {
 
     protected abstract void makeUpdate(T key, Resume r);
 
-    protected abstract void makeSave(Resume r, T key);
+    protected abstract void makeSave(T key, Resume r);
 
     protected abstract Resume makeGet(T key);
 
