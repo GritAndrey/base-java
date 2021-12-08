@@ -10,14 +10,15 @@ import ru.javawebinar.basejava.model.Resume;
 public abstract class AbstractStorageTest {
 
     protected final Storage storage;
-    private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid2";
-    private static final String UUID_3 = "uuid3";
-    private static final String UUID_4 = "uuid4";
-    private static final String DUMMY = "dummy";
-    private static final Resume r1 = new Resume(UUID_1);
-    private static final Resume r2 = new Resume(UUID_2);
-    private static final Resume r3 = new Resume(UUID_3);
+
+    static final String UUID_1 = "uuid1";
+    static final String UUID_2 = "uuid2";
+    static final String UUID_3 = "uuid3";
+    static final String UUID_4 = "uuid4";
+    static final String DUMMY = "dummy";
+    static final Resume r1 = new Resume(UUID_1);
+    static final Resume r2 = new Resume(UUID_2);
+    static final Resume r3 = new Resume(UUID_3);
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
