@@ -7,9 +7,6 @@ import ru.javawebinar.basejava.model.Resume;
 public abstract class AbstractStorage<T> implements Storage {
 
     @Override
-    public abstract void clear();
-
-    @Override
     public void update(Resume r) {
         if (r == null || r.getUuid() == null) return;
         T key = getKey(r.getUuid());
@@ -52,13 +49,6 @@ public abstract class AbstractStorage<T> implements Storage {
             throw new NotExistStorageException(uuid);
         }
     }
-
-    @Override
-    public abstract Resume[] getAll();
-
-    @Override
-    public abstract int size();
-
 
     protected abstract boolean isExist(T key);
 
