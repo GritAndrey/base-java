@@ -30,7 +30,9 @@ public class ListStorage extends AbstractStorage<Integer> {
 
     @Override
     protected Integer getKey(String uuid) {
-        return getIndex(uuid);
+        return IntStream.range(0, storage.size())
+                .filter(i -> storage.get(i).getUuid().equals(uuid))
+                .findFirst().orElse(-1);
     }
 
     @Override
@@ -53,9 +55,4 @@ public class ListStorage extends AbstractStorage<Integer> {
         storage.remove((int) key);
     }
 
-    private int getIndex(String uuid) {
-        return IntStream.range(0, storage.size())
-                .filter(i -> storage.get(i).getUuid().equals(uuid))
-                .findFirst().orElse(-1);
-    }
 }
