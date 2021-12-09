@@ -27,10 +27,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
         return this.size;
     }
 
-    private boolean checkCapacity() {
-        return size < STORAGE_LIMIT;
-    }
-
     @Override
     protected boolean isExist(Integer key) {
         return key >= 0;
@@ -53,6 +49,10 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
         }
         add(r, key);
         size++;
+    }
+
+    private boolean checkCapacity() {
+        return size < STORAGE_LIMIT;
     }
 
     @Override
