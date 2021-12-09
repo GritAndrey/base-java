@@ -11,7 +11,6 @@ public abstract class AbstractStorage<T> implements Storage {
     @Override
     public void update(Resume r) {
         Objects.requireNonNull(r);
-        Objects.requireNonNull(r.getUuid());
         T key = getKeyErrorIfNotExist(r.getUuid());
         makeUpdate(key, r);
     }
@@ -19,26 +18,24 @@ public abstract class AbstractStorage<T> implements Storage {
     @Override
     public void save(Resume r) {
         Objects.requireNonNull(r);
-        Objects.requireNonNull(r.getUuid());
         T key = getKeyErrorIfExist(r.getUuid());
         makeSave(key, r);
     }
 
     @Override
     public Resume get(String uuid) {
-        Objects.requireNonNull(uuid);
         T key = getKeyErrorIfNotExist(uuid);
         return makeGet(key);
     }
 
     @Override
     public void delete(String uuid) {
-        Objects.requireNonNull(uuid);
         T key = getKeyErrorIfNotExist(uuid);
         makeDelete(key);
     }
 
     private T getKeyErrorIfExist(String uuid) {
+        Objects.requireNonNull(uuid);
         T key = getKey(uuid);
         if (isExist(key)) {
             throw new ExistStorageException(uuid);
@@ -47,6 +44,7 @@ public abstract class AbstractStorage<T> implements Storage {
     }
 
     private T getKeyErrorIfNotExist(String uuid) {
+        Objects.requireNonNull(uuid);
         T key = getKey(uuid);
         if (!isExist(key)) {
             throw new NotExistStorageException(uuid);
