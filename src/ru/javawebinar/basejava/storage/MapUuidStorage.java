@@ -4,18 +4,14 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
-public class MapStorage extends AbstractStorage<String> {
+public class MapUuidStorage extends AbstractStorage<String> {
     private final Map<String, Resume> storage = new HashMap<>();
 
     @Override
     public void clear() {
         storage.clear();
-    }
-
-    @Override
-    public Resume[] getAll() {
-        return storage.values().toArray(new Resume[0]);
     }
 
     @Override
@@ -51,5 +47,10 @@ public class MapStorage extends AbstractStorage<String> {
     @Override
     protected void makeDelete(String key) {
         storage.remove(key);
+    }
+
+    @Override
+    protected Stream<Resume> getStorageStream() {
+        return storage.values().stream();
     }
 }

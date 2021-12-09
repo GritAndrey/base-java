@@ -4,7 +4,10 @@ import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractStorage<T> implements Storage {
 
@@ -51,6 +54,15 @@ public abstract class AbstractStorage<T> implements Storage {
         }
         return key;
     }
+
+    @Override
+    public List<Resume> getAllSorted() {
+        return getStorageStream()
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    protected abstract Stream<Resume> getStorageStream();
 
     protected abstract boolean isExist(T key);
 

@@ -19,9 +19,7 @@ public class MainCollections {
         for (Resume r : collection) {
             System.out.println(r);
         }
-        Iterator<Resume> iterator = collection.iterator();
-        while (iterator.hasNext()) {
-            Resume resume = iterator.next();
+        for (Resume resume : collection) {
             System.out.println(resume);
 /*            if (Objects.equals(resume.getUuid(), UUID_1)) {
                 iterator.remove();
@@ -32,5 +30,7 @@ public class MainCollections {
         Map<String, Resume> map = collection.stream().collect(Collectors.toMap(Resume::getUuid, Function.identity()));
         System.out.println(map.get(UUID_2).getClass().getName());
         System.out.println(map);
+        List<Resume> resumes = Arrays.asList(r1, r2, r3);
+        System.out.println(resumes);
     }
 }

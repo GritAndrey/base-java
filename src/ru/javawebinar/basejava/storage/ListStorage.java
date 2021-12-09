@@ -5,6 +5,7 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class ListStorage extends AbstractStorage<Integer> {
     private final List<Resume> storage = new ArrayList<>();
@@ -12,11 +13,6 @@ public class ListStorage extends AbstractStorage<Integer> {
     @Override
     public void clear() {
         storage.clear();
-    }
-
-    @Override
-    public Resume[] getAll() {
-        return storage.toArray(new Resume[0]);
     }
 
     @Override
@@ -54,5 +50,10 @@ public class ListStorage extends AbstractStorage<Integer> {
     @Override
     protected void makeDelete(Integer key) {
         storage.remove((int) key);
+    }
+
+    @Override
+    protected Stream<Resume> getStorageStream() {
+        return storage.stream();
     }
 }

@@ -7,6 +7,9 @@ import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
+import java.util.Arrays;
+import java.util.List;
+
 public abstract class AbstractStorageTest {
 
     protected final Storage storage;
@@ -16,9 +19,9 @@ public abstract class AbstractStorageTest {
     static final String UUID_3 = "uuid3";
     static final String UUID_4 = "uuid4";
     static final String DUMMY = "dummy";
-    static final Resume r1 = new Resume(UUID_1);
-    static final Resume r2 = new Resume(UUID_2);
-    static final Resume r3 = new Resume(UUID_3);
+    static final Resume r1 = new Resume(UUID_1, "Name0");
+    static final Resume r2 = new Resume(UUID_2, "Name1");
+    static final Resume r3 = new Resume(UUID_3, "Name2");
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -40,7 +43,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume updatedResume = new Resume(UUID_1);
+        Resume updatedResume = new Resume(UUID_1, "Name1");
         storage.update(updatedResume);
         Assert.assertSame(updatedResume, storage.get(UUID_1));
     }
@@ -64,7 +67,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void save() {
-        Resume r4 = new Resume(UUID_4);
+        Resume r4 = new Resume(UUID_4, "Name4");
         storage.save(r4);
         Assert.assertEquals(4, storage.size());
         Assert.assertEquals(r4, storage.get(UUID_4));
@@ -88,10 +91,10 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void getAll() {
-        Resume[] actualResumes = storage.getAll();
-        Assert.assertArrayEquals(new Resume[]{r1, r2, r3}, actualResumes);
-        Assert.assertEquals(3, actualResumes.length);
+    public void getAllSorted() {
+        List<Resume> actualResumes = storage.getAllSorted();
+        Assert.assertEquals(Arrays.asList(r1, r2, r3), actualResumes);
+        Assert.assertEquals(3, actualResumes.size());
     }
 
     @Test
