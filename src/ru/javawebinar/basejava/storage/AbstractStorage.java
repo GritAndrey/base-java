@@ -4,50 +4,54 @@ import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
+import java.util.Objects;
+
 public abstract class AbstractStorage<T> implements Storage {
 
     @Override
     public void update(Resume r) {
-        if (r == null || r.getUuid() == null) return;
-        T key = getKey(r.getUuid());
-        if (isExist(key)) {
-            makeUpdate(key, r);
-        } else {
-            throw new NotExistStorageException(r.getUuid());
-        }
+        Objects.requireNonNull(r);
+        Objects.requireNonNull(r.getUuid());
+        T key = getKeyErrorIfNotExist(r.getUuid());
+        makeUpdate(key, r);
     }
 
     @Override
     public void save(Resume r) {
-        if (r == null || r.getUuid() == null) return;
-        T key = getKey(r.getUuid());
-        if (isExist(key)) {
-            throw new ExistStorageException(r.getUuid());
-        } else {
-            makeSave(key, r);
-        }
+        Objects.requireNonNull(r);
+        Objects.requireNonNull(r.getUuid());
+        T key = getKeyErrorIfExist(r.getUuid());
+        makeSave(key, r);
     }
 
     @Override
     public Resume get(String uuid) {
-        if (uuid == null) return null;
-        T key = getKey(uuid);
-        if (isExist(key)) {
-            return makeGet(key);
-        }
-        throw new NotExistStorageException(uuid);
-
+        Objects.requireNonNull(uuid);
+        T key = getKeyErrorIfNotExist(uuid);
+        return makeGet(key);
     }
 
     @Override
     public void delete(String uuid) {
-        if (uuid == null) return;
+        Objects.requireNonNull(uuid);
+        T key = getKeyErrorIfNotExist(uuid);
+        makeDelete(key);
+    }
+
+    private T getKeyErrorIfExist(String uuid) {
         T key = getKey(uuid);
         if (isExist(key)) {
-            makeDelete(key);
-        } else {
+            throw new ExistStorageException(uuid);
+        }
+        return key;
+    }
+
+    private T getKeyErrorIfNotExist(String uuid) {
+        T key = getKey(uuid);
+        if (!isExist(key)) {
             throw new NotExistStorageException(uuid);
         }
+        return key;
     }
 
     protected abstract boolean isExist(T key);
