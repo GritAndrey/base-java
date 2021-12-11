@@ -1,5 +1,7 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.List;
+
 public enum SectionType {
     PERSONAL("Личные качества"),
     OBJECTIVE("Позиция"),
