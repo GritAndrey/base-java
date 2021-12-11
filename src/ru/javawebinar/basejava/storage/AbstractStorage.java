@@ -6,7 +6,6 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class AbstractStorage<T> implements Storage {
@@ -14,30 +13,30 @@ public abstract class AbstractStorage<T> implements Storage {
     @Override
     public void update(Resume r) {
         Objects.requireNonNull(r);
-        T key = getKeyErrorIfNotExist(r.getUuid());
+        T key = getExistedKey(r.getUuid());
         makeUpdate(key, r);
     }
 
     @Override
     public void save(Resume r) {
         Objects.requireNonNull(r);
-        T key = getKeyErrorIfExist(r.getUuid());
+        T key = getNotExistedKey(r.getUuid());
         makeSave(key, r);
     }
 
     @Override
     public Resume get(String uuid) {
-        T key = getKeyErrorIfNotExist(uuid);
+        T key = getExistedKey(uuid);
         return makeGet(key);
     }
 
     @Override
     public void delete(String uuid) {
-        T key = getKeyErrorIfNotExist(uuid);
+        T key = getExistedKey(uuid);
         makeDelete(key);
     }
 
-    private T getKeyErrorIfExist(String uuid) {
+    private T getNotExistedKey(String uuid) {
         Objects.requireNonNull(uuid);
         T key = getKey(uuid);
         if (isExist(key)) {
@@ -46,7 +45,7 @@ public abstract class AbstractStorage<T> implements Storage {
         return key;
     }
 
-    private T getKeyErrorIfNotExist(String uuid) {
+    private T getExistedKey(String uuid) {
         Objects.requireNonNull(uuid);
         T key = getKey(uuid);
         if (!isExist(key)) {
@@ -59,7 +58,7 @@ public abstract class AbstractStorage<T> implements Storage {
     public List<Resume> getAllSorted() {
         return getStorageStream()
                 .sorted()
-                .collect(Collectors.toList());
+                .toList();
     }
 
     protected abstract Stream<Resume> getStorageStream();

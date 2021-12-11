@@ -74,6 +74,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     @Override
     protected Stream<Resume> getStorageStream() {
-        return Arrays.stream(Arrays.copyOf(storage, size));
+        return Arrays.stream(storage).limit(size);
     }
 }
