@@ -10,9 +10,9 @@ public class MainCollections {
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
-    private static final Resume r1 = new Resume(UUID_1);
-    private static final Resume r2 = new Resume(UUID_2);
-    private static final Resume r3 = new Resume(UUID_3);
+    private static final Resume r1 = new Resume(UUID_1,"Name1");
+    private static final Resume r2 = new Resume(UUID_2, "Name2");
+    private static final Resume r3 = new Resume(UUID_3, "Name3");
 
     public static void main(String[] args) {
         List<Resume> collection = new ArrayList<>(Arrays.asList(r1, r2, r3));

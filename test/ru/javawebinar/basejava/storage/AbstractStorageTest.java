@@ -19,9 +19,9 @@ public abstract class AbstractStorageTest {
     static final String UUID_3 = "uuid3";
     static final String UUID_4 = "uuid4";
     static final String DUMMY = "dummy";
-    static final Resume r1 = new Resume(UUID_1, "Name0");
-    static final Resume r2 = new Resume(UUID_2, "Name1");
-    static final Resume r3 = new Resume(UUID_3, "Name2");
+    static final Resume r1 = new Resume(UUID_1, "Name1");
+    static final Resume r2 = new Resume(UUID_2, "Name2");
+    static final Resume r3 = new Resume(UUID_3, "Name3");
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -43,7 +43,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume updatedResume = new Resume(UUID_1, "Name1");
+        Resume updatedResume = new Resume(UUID_1, "New Name");
         storage.update(updatedResume);
         Assert.assertSame(updatedResume, storage.get(UUID_1));
     }
@@ -93,8 +93,9 @@ public abstract class AbstractStorageTest {
     @Test
     public void getAllSorted() {
         List<Resume> actualResumes = storage.getAllSorted();
-        Assert.assertEquals(Arrays.asList(r1, r2, r3), actualResumes);
         Assert.assertEquals(3, actualResumes.size());
+        Assert.assertEquals(Arrays.asList(r1, r2, r3), actualResumes);
+
     }
 
     @Test
