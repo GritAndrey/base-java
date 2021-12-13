@@ -8,6 +8,7 @@ public abstract class ResumeSectionList<T> implements Section<T> {
     protected final List<T> elements;
 
     public ResumeSectionList(List<T> elements) {
+        Objects.requireNonNull(elements, "elements must not be null");
         this.elements = elements;
     }
 
@@ -25,11 +26,12 @@ public abstract class ResumeSectionList<T> implements Section<T> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ResumeSectionList<?> that = (ResumeSectionList<?>) o;
-        return Objects.equals(elements, that.elements);
+        return elements.equals(that.elements);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(elements);
     }
+
 }
