@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class OrgListSectionImpl implements Section<WorkPoint> {
+public class WorkPointsListSectionImpl implements Section<WorkPoint> {
     private final List<WorkPoint> content = new ArrayList<>();
 
     @Override

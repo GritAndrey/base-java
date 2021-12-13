@@ -32,14 +32,14 @@ public class SectionFactory {
                 return listStringSection;
             }
             case EXPERIENCE -> {
-                OrgListSectionImpl orgListSection = new OrgListSectionImpl();
+                WorkPointsListSectionImpl orgListSection = new WorkPointsListSectionImpl();
                 orgListSection.addWorkPoint(new WorkPoint("org1","www.site1.org","do some work 1"));
                 orgListSection.addWorkPoint(new WorkPoint("org2","www.site2.org","do some work 2"));
                 orgListSection.addWorkPoint(new WorkPoint("org3","www.site3.org","do some work 3"));
                 return orgListSection;
             }
             case EDUCATION -> {
-                OrgListSectionImpl orgListSection = new OrgListSectionImpl();
+                WorkPointsListSectionImpl orgListSection = new WorkPointsListSectionImpl();
                 orgListSection.addWorkPoint(new WorkPoint("edu1","www.site1.edu","learn 1"));
                 orgListSection.addWorkPoint(new WorkPoint("edu2","www.site2.edu","learn 2"));
                 orgListSection.addWorkPoint(new WorkPoint("edu3","www.site3.edu","learn 3"));
