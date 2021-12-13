@@ -1,6 +1,6 @@
 package ru.javawebinar.basejava;
 
-import ru.javawebinar.basejava.model.Contacts;
+import ru.javawebinar.basejava.model.ContactsType;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.model.Section;
 import ru.javawebinar.basejava.model.SectionType;
@@ -12,11 +12,11 @@ public class ResumeTestData {
     public static void main(String[] args) {
         Resume testResume = new Resume("Test Name");
 
-        Map<Contacts, String> resumeContacts = testResume.getContacts();
-        resumeContacts.put(Contacts.EMAIL, "somemail@mail.ru");
-        resumeContacts.put(Contacts.PHONE, "1234567");
-        resumeContacts.put(Contacts.SKYPE, "skype of Test Name");
-        resumeContacts.put(Contacts.SOCIAL, "Какая-то социальная сеть");
+        Map<ContactsType, String> resumeContacts = testResume.getContacts();
+        resumeContacts.put(ContactsType.EMAIL, "somemail@mail.ru");
+        resumeContacts.put(ContactsType.PHONE, "1234567");
+        resumeContacts.put(ContactsType.SKYPE, "skype of Test Name");
+        resumeContacts.put(ContactsType.SOCIAL, "Какая-то социальная сеть");
 
         Map<SectionType, Section> resumeSections = testResume.getSections();
 
@@ -35,7 +35,6 @@ public class ResumeTestData {
             content.getContent().forEach(System.out::println);
             System.out.println("-----------------------------");
         });
-
 
     }
 }

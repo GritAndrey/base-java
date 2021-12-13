@@ -14,10 +14,10 @@ public class SectionFactory {
     public  Section getSection() {
         switch (sectionType) {
             case PERSONAL -> {
-                return new StringSectionImpl("HardCoded PERSONAL Личные качества.");
+                return new BulletedListSection("HardCoded PERSONAL Личные качества.");
             }
             case OBJECTIVE -> {
-                return new StringSectionImpl("HardCoded OBJECTIVE Позиция.");
+                return new BulletedListSection("HardCoded OBJECTIVE Позиция.");
             }
             case ACHIEVEMENT -> {
                 ListStringSectionImpl listStringSection = new ListStringSectionImpl();
@@ -32,17 +32,17 @@ public class SectionFactory {
                 return listStringSection;
             }
             case EXPERIENCE -> {
-                WorkPointsListSectionImpl orgListSection = new WorkPointsListSectionImpl();
-                orgListSection.getElements().add(new WorkPoint("org1","www.site1.org","do some work 1"));
-                orgListSection.getElements().add(new WorkPoint("org2","www.site2.org","do some work 2"));
-                orgListSection.getElements().add(new WorkPoint("org3","www.site3.org","do some work 3"));
+                OrganizationListSection orgListSection = new OrganizationListSection();
+                orgListSection.getElements().add(new Experience("org1","www.site1.org","do some work 1"));
+                orgListSection.getElements().add(new Experience("org2","www.site2.org","do some work 2"));
+                orgListSection.getElements().add(new Experience("org3","www.site3.org","do some work 3"));
                 return orgListSection;
             }
             case EDUCATION -> {
-                WorkPointsListSectionImpl orgListSection = new WorkPointsListSectionImpl();
-                orgListSection.getElements().add(new WorkPoint("edu1","www.site1.edu","learn 1"));
-                orgListSection.getElements().add(new WorkPoint("edu2","www.site2.edu","learn 2"));
-                orgListSection.getElements().add(new WorkPoint("edu3","www.site3.edu","learn 3"));
+                OrganizationListSection orgListSection = new OrganizationListSection();
+                orgListSection.getElements().add(new Experience("edu1","www.site1.edu","learn 1"));
+                orgListSection.getElements().add(new Experience("edu2","www.site2.edu","learn 2"));
+                orgListSection.getElements().add(new Experience("edu3","www.site3.edu","learn 3"));
                 return orgListSection;
             }
             default -> throw new NoSuchElementException();

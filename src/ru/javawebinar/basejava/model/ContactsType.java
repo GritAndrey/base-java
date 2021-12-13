@@ -1,6 +1,6 @@
 package ru.javawebinar.basejava.model;
 
-public enum Contacts {
+public enum ContactsType {
     PHONE("Тел"),
     SKYPE("Skype"),
     EMAIL("Почта"),
@@ -8,7 +8,7 @@ public enum Contacts {
 
     private final String contactType;
 
-    Contacts(String contactType) {
+    ContactsType(String contactType) {
         this.contactType = contactType;
     }
 

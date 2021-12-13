@@ -2,12 +2,12 @@ package ru.javawebinar.basejava.model;
 
 import java.util.Objects;
 
-public class WorkPoint {
+public class Experience {
     private String orgName;
     private String orgSite;
     private String workDescription;
 
-    public WorkPoint(String orgName, String orgSite, String workDescription) {
+    public Experience(String orgName, String orgSite, String workDescription) {
         this.orgName = orgName;
         this.orgSite = orgSite;
         this.workDescription = workDescription;
@@ -40,8 +40,8 @@ public class WorkPoint {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        WorkPoint workPoint = (WorkPoint) o;
-        return Objects.equals(orgName, workPoint.orgName) && Objects.equals(orgSite, workPoint.orgSite) && Objects.equals(workDescription, workPoint.workDescription);
+        Experience experience = (Experience) o;
+        return Objects.equals(orgName, experience.orgName) && Objects.equals(orgSite, experience.orgSite) && Objects.equals(workDescription, experience.workDescription);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class WorkPoint {
 
     @Override
     public String toString() {
-        return "WorkPoint{" +
+        return "Experience{" +
                 "orgName='" + orgName + '\'' +
                 ", orgSite='" + orgSite + '\'' +
                 ", workDescription='" + workDescription + '\'' +
