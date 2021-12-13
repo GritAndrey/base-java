@@ -5,26 +5,15 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class ListStringSectionImpl implements Section<String> {
-    private final List<String> content = new ArrayList<>();
+    private final List<String> elements = new ArrayList<>();
+
+    public List<String> getElements() {
+        return elements;
+    }
 
     @Override
     public Stream<String> getContent() {
-        return content.stream();
+        return elements.stream();
     }
 
-    public void addContentElem(String elem) {
-        content.add(elem);
-    }
-
-    public void deleteContentElem(int index) {
-        content.remove(index);
-    }
-
-    public String getContentElem(int index) {
-        return content.get(index);
-    }
-
-    public void updateContentElem(String element, int index) {
-        content.set(index, element);
-    }
 }

@@ -5,23 +5,16 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class WorkPointsListSectionImpl implements Section<WorkPoint> {
-    private final List<WorkPoint> content = new ArrayList<>();
+    private final List<WorkPoint> workPoints = new ArrayList<>();
+
+    public List<WorkPoint> getWorkPoints() {
+        return workPoints;
+    }
 
     @Override
     public Stream<WorkPoint> getContent() {
-        return content.stream();
+        return workPoints.stream();
     }
 
-    public void addWorkPoint(WorkPoint workPoint) {
-        content.add(workPoint);
-    }
-    public void updateWorkPoint(WorkPoint workPoint, int index) {
-        content.set(index, workPoint);
-    }
-    public void deleteWorkPoint(int index) {
-        content.remove(index);
-    }
-    public WorkPoint getWorkPoint(int index) {
-        return content.get(index);
-    }
+
 }
