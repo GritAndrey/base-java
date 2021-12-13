@@ -4,17 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class WorkPointsListSectionImpl implements Section<WorkPoint> {
-    private final List<WorkPoint> workPoints = new ArrayList<>();
+public class WorkPointsListSectionImpl extends ResumeSectionList<WorkPoint> {
 
-    public List<WorkPoint> getWorkPoints() {
-        return workPoints;
+    public WorkPointsListSectionImpl() {
+        super(new ArrayList<>());
     }
-
-    @Override
-    public Stream<WorkPoint> getContent() {
-        return workPoints.stream();
-    }
-
-
 }

@@ -1,19 +1,10 @@
 package ru.javawebinar.basejava.model;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
 
-public class ListStringSectionImpl implements Section<String> {
-    private final List<String> elements = new ArrayList<>();
+public class ListStringSectionImpl extends ResumeSectionList<String> {
 
-    public List<String> getElements() {
-        return elements;
+    public ListStringSectionImpl() {
+        super(new ArrayList<>());
     }
-
-    @Override
-    public Stream<String> getContent() {
-        return elements.stream();
-    }
-
 }
