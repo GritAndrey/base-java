@@ -8,21 +8,13 @@ import java.util.UUID;
 /**
  * Initial resume class
  */
+@SuppressWarnings("rawtypes")
 public class Resume implements Comparable<Resume> {
 
     private final String uuid;
     private String fullName;
     private final Map<Contacts, String> contacts = new EnumMap<>(Contacts.class);
     private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
-
-    public Map<Contacts, String> getContacts() {
-        return contacts;
-    }
-
-    public Map<SectionType, Section> getSections() {
-        return sections;
-    }
-
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -33,6 +25,14 @@ public class Resume implements Comparable<Resume> {
         Objects.requireNonNull(fullName, "fullName must not be null");
         this.uuid = uuid;
         this.fullName = fullName;
+    }
+
+    public Map<Contacts, String> getContacts() {
+        return contacts;
+    }
+
+    public Map<SectionType, Section> getSections() {
+        return sections;
     }
 
     public String getUuid() {

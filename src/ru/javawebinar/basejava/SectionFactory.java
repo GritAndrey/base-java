@@ -1,4 +1,6 @@
-package ru.javawebinar.basejava.model;
+package ru.javawebinar.basejava;
+
+import ru.javawebinar.basejava.model.*;
 
 import java.util.NoSuchElementException;
 
@@ -8,8 +10,8 @@ public class SectionFactory {
     public SectionFactory(SectionType sectionType) {
         this.sectionType = sectionType;
     }
-
-    public Section getSection() {
+@SuppressWarnings({"rawtypes"})
+    public  Section getSection() {
         switch (sectionType) {
             case PERSONAL -> {
                 return new StringSectionImpl("HardCoded PERSONAL Личные качества.");

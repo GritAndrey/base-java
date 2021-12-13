@@ -6,8 +6,7 @@ public enum Contacts {
     EMAIL("Почта"),
     SOCIAL("Социальная сеть");
 
-    private String contactType;
-
+    private final String contactType;
 
     Contacts(String contactType) {
         this.contactType = contactType;

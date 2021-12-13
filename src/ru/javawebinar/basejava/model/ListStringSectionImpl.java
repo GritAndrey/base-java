@@ -15,4 +15,5 @@ public class ListStringSectionImpl implements Section<String> {
     public void addContentElem(String elem) {
         content.add(elem);
     }
+
 }
