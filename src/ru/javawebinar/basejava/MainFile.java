@@ -2,18 +2,29 @@ package ru.javawebinar.basejava;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Objects;
 
 public class MainFile {
-    public static void main(String[] args) throws IOException {
-        File file = new File(".gitignore");
-        System.out.println(file.getCanonicalPath());
-        File dir = new File("src/ru/javawebinar/basejava");
-        System.out.println(dir.getCanonicalPath());
-        System.out.println(dir.isDirectory());
-        String[] list = dir.list();
-        if (list != null) {
-            Arrays.stream(list).forEach(System.out::println);
+    public static void main(String[] args) {
+        File rootDir = new File(".");
+        printAllFileNames(rootDir);
+    }
+
+    private static void printAllFileNames(File startDir) {
+        Objects.requireNonNull(startDir);
+        if (!startDir.exists()) {
+            return;
+        }
+        if (startDir.isDirectory()) {
+            for (File elem : Objects.requireNonNull(startDir.listFiles())) {
+                if (elem.isFile()) {
+                    System.out.println(elem);
+                } else {
+                    printAllFileNames(elem);
+                }
+            }
+        } else {
+            System.out.println(startDir);
         }
     }
 
