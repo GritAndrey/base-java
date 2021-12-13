@@ -13,4 +13,7 @@ public class StringSectionImpl implements Section<String> {
     public Stream<String> getContent() {
         return Stream.of(content);
     }
+    public void setContent(String content) {
+        this.content = content;
+    }
 }

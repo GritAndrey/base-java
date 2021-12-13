@@ -15,4 +15,13 @@ public class OrgListSectionImpl implements Section<WorkPoint> {
     public void addWorkPoint(WorkPoint workPoint) {
         content.add(workPoint);
     }
+    public void updateWorkPoint(WorkPoint workPoint, int index) {
+        content.set(index, workPoint);
+    }
+    public void deleteWorkPoint(int index) {
+        content.remove(index);
+    }
+    public WorkPoint getWorkPoint(int index) {
+        return content.get(index);
+    }
 }

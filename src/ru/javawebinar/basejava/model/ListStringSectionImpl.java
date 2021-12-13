@@ -16,4 +16,15 @@ public class ListStringSectionImpl implements Section<String> {
         content.add(elem);
     }
 
+    public void deleteContentElem(int index) {
+        content.remove(index);
+    }
+
+    public String getContentElem(int index) {
+        return content.get(index);
+    }
+
+    public void updateContentElem(String element, int index) {
+        content.set(index, element);
+    }
 }
