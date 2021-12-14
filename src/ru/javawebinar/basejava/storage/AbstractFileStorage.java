@@ -91,7 +91,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     private File[] getNotNullFilesList() {
         if (storageDir.listFiles() != null)
             return storageDir.listFiles();
-        throw new StorageException("empty dir",null);
+        throw new StorageException("empty dir", null);
     }
 
     protected abstract Resume read(File key) throws IOException;
