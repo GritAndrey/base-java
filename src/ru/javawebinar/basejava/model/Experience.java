@@ -38,10 +38,7 @@ public class Experience {
 
     @Override
     public String toString() {
-        return "Experience{" +
-                "homePage=" + homePage +
-                ", workPositions=" + workPositions +
-                '}';
+        return homePage + " " + workPositions;
     }
 
     @Override
@@ -80,12 +77,10 @@ public class Experience {
 
         @Override
         public String toString() {
-            return "WorkPosition{" +
-                    "startDate=" + startDate +
-                    ", endDate=" + endDate +
-                    (description == null ? "" : ", description='" + description) + '\'' +
-                    ", title='" + title + '\'' +
-                    '}';
+            return "Начало: " + startDate +
+                            ", Окончание: " + endDate +
+                            (description == null ? "" : ", Обязанности: " + description) +
+                            ", Позиция: '" + title + '\'';
         }
     }
 }

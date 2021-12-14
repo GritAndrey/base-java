@@ -3,6 +3,7 @@ package ru.javawebinar.basejava;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashSet;
@@ -21,7 +22,7 @@ public class MainFile {
             return;
         }
         if (!rootDir.isDirectory()) {
-            System.out.println(rootDir);
+            System.out.println(rootDir.getName());
             return;
         }
         for (File elem : Objects.requireNonNull(rootDir.listFiles())) {
@@ -47,11 +48,13 @@ public class MainFile {
     private static void filesWalk(String rootDir) throws IOException {
         Files.walk(Paths.get("."))
                 .filter(Files::isRegularFile)
+                .map(Path::getFileName)
                 .forEach(System.out::println);
     }
 
     private static void filesFind(String rootDir) throws IOException {
         Files.find(Paths.get("."), Integer.MAX_VALUE, (filePath, fileAttr) -> fileAttr.isRegularFile())
+                .map(Path::getFileName)
                 .forEach(System.out::println);
     }
 
