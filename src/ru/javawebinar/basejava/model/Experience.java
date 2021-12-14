@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -9,7 +10,22 @@ public class Experience {
 
     private final Link homePage;
 
-    private final List<WorkPosition> workPositions = new ArrayList<>();
+    private final List<WorkPosition> workPositions = new ArrayList<>() {
+        @Override
+        public String toString() {
+            Iterator<WorkPosition> it = iterator();
+            if (!it.hasNext())
+                return "";
+            StringBuilder sb = new StringBuilder();
+            for (; ; ) {
+                WorkPosition e = it.next();
+                sb.append(e);
+                if (!it.hasNext())
+                    return sb.toString();
+                sb.append(';').append(' ');
+            }
+        }
+    };
 
     public Experience(String name, String url, LocalDate startDate, LocalDate endDate, String title, String description) {
         this.homePage = new Link(name, url);
@@ -78,9 +94,9 @@ public class Experience {
         @Override
         public String toString() {
             return "Начало: " + startDate +
-                            ", Окончание: " + endDate +
-                            (description == null ? "" : ", Обязанности: " + description) +
-                            ", Позиция: '" + title + '\'';
+                    ", Окончание: " + endDate +
+                    (description == null ? "" : ", Обязанности: " + description) +
+                    ", Позиция: '" + title + '\'';
         }
     }
 }
