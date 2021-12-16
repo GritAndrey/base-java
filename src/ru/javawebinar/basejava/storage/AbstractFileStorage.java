@@ -61,7 +61,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
                 throw new Error("Impossible");
             }
         } catch (IOException e) {
-            throw new StorageException("File IOError", key.toString(), e);
+            throw new StorageException("Couldn't create file " + key.getAbsolutePath(), key.getName(), e);
         }
         makeUpdate(key, resume);
     }
@@ -69,7 +69,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void makeDelete(File key) {
         if (!key.delete()) {
-            throw new StorageException("Can`t delete file", key.toString());
+            throw new StorageException("Can`t delete file", key.getName());
         }
     }
 

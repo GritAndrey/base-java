@@ -1,10 +1,15 @@
 package ru.javawebinar.basejava.model;
 
+import ru.javawebinar.basejava.util.DateUtil;
+
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+
+import static ru.javawebinar.basejava.util.DateUtil.NOW;
 
 public class Experience {
 
@@ -62,11 +67,15 @@ public class Experience {
         return Objects.hash(homePage, workPositions);
     }
 
-    private class WorkPosition {
-        private LocalDate startDate;
-        private LocalDate endDate;
-        private String description;
-        private String title;
+    public static class WorkPosition {
+        private final LocalDate startDate;
+        private final LocalDate endDate;
+        private final String description;
+        private final String title;
+
+        public WorkPosition(int startYear, Month startMonth, String title, String description) {
+            this(DateUtil.of(startYear, startMonth), NOW, title, description);
+        }
 
         public WorkPosition(LocalDate startDate, LocalDate endDate, String title, String description) {
             Objects.requireNonNull(startDate, "startDate must not be null");

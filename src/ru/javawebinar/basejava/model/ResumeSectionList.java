@@ -1,11 +1,16 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 public abstract class ResumeSectionList<T> implements Section<T> {
     protected final List<T> elements;
+
+    public ResumeSectionList(T ... element) {
+        this(Arrays.asList(element));
+    }
 
     public ResumeSectionList(List<T> elements) {
         Objects.requireNonNull(elements, "elements must not be null");
