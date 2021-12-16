@@ -37,14 +37,6 @@ public class Organization {
         positions.add(new Position(startDate, endDate, title, description));
     }
 
-    public Link getHomePage() {
-        return homePage;
-    }
-
-    public List<Position> getWorkPositions() {
-        return positions;
-    }
-
     public void addWorkPosition(LocalDate startDate, LocalDate endDate, String title, String description) {
         positions.add(new Position(startDate, endDate, title, description));
     }
