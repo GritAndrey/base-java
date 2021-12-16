@@ -13,19 +13,19 @@ import java.util.Set;
 public class MainFile {
     public static void main(String[] args) {
         File rootDir = new File(".");
-        printDirectoryDeeply(rootDir);
+        printDirectoryDeeply(rootDir, "");
     }
 
-    public static void printDirectoryDeeply(File dir) {
+    public static void printDirectoryDeeply(File dir, String indent) {
         File[] files = dir.listFiles();
 
         if (files != null) {
             for (File file : files) {
                 if (file.isFile()) {
-                    System.out.println("File: " + file.getName());
+                    System.out.println(indent + file.getName());
                 } else if (file.isDirectory()) {
-                    System.out.println("Directory: " + file.getName());
-                    printDirectoryDeeply(file);
+                    System.out.println(indent + "- " + file.getName());
+                    printDirectoryDeeply(file, " " + indent);
                 }
             }
         }
