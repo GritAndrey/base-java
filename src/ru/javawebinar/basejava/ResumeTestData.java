@@ -8,7 +8,6 @@ import ru.javawebinar.basejava.model.SectionType;
 import java.util.Arrays;
 import java.util.Map;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
 public class ResumeTestData {
     public static void main(String[] args) {
         Resume resume = generateResume("testUuid", "testName");

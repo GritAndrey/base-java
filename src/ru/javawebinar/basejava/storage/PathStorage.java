@@ -92,6 +92,4 @@ public class PathStorage extends AbstractStorage<Path> {
             throw new StorageException(" Storage directory I/O error", null, e);
         }
     }
-
-
 }
