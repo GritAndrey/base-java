@@ -1,5 +1,7 @@
 package ru.javawebinar.basejava.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
@@ -8,13 +10,14 @@ import java.util.UUID;
 /**
  * Initial resume class
  */
-@SuppressWarnings("rawtypes")
-public class Resume implements Comparable<Resume> {
+public class Resume implements Comparable<Resume>, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private final String uuid;
-    private String fullName;
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
     private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
+    private String fullName;
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);

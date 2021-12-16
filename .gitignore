@@ -3,5 +3,6 @@ out
 *.iml
 log
 target
+storage
 
 

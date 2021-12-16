@@ -1,11 +1,15 @@
 package ru.javawebinar.basejava.model;
 
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 public class OrganizationSection extends Section {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final List<Organization> organizations;
 
     public OrganizationSection(Organization... organizations) {
@@ -20,6 +24,19 @@ public class OrganizationSection extends Section {
 
     public List<Organization> getOrganizations() {
         return organizations;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrganizationSection that = (OrganizationSection) o;
+        return organizations.equals(that.organizations);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(organizations);
     }
 
     @SuppressWarnings("unchecked")

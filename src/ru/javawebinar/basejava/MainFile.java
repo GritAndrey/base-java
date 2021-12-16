@@ -13,20 +13,21 @@ import java.util.Set;
 public class MainFile {
     public static void main(String[] args) {
         File rootDir = new File(".");
-        printAllFileNames(rootDir);
+        printDirectoryDeeply(rootDir);
     }
 
-    private static void printAllFileNames(File rootDir) {
-        Objects.requireNonNull(rootDir);
-        if (!rootDir.exists()) {
-            return;
-        }
-        if (!rootDir.isDirectory()) {
-            System.out.println(rootDir.getName());
-            return;
-        }
-        for (File elem : Objects.requireNonNull(rootDir.listFiles())) {
-            printAllFileNames(elem);
+    public static void printDirectoryDeeply(File dir) {
+        File[] files = dir.listFiles();
+
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    System.out.println("File: " + file.getName());
+                } else if (file.isDirectory()) {
+                    System.out.println("Directory: " + file.getName());
+                    printDirectoryDeeply(file);
+                }
+            }
         }
     }
 

@@ -2,6 +2,8 @@ package ru.javawebinar.basejava.model;
 
 import ru.javawebinar.basejava.util.DateUtil;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -11,7 +13,9 @@ import java.util.Objects;
 
 import static ru.javawebinar.basejava.util.DateUtil.NOW;
 
-public class Organization {
+public class Organization implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private final Link homePage;
 
@@ -46,12 +50,7 @@ public class Organization {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Organization that = (Organization) o;
-        return homePage.equals(that.homePage) && positions.equals(that.positions);
-    }
-
-    @Override
-    public String toString() {
-        return homePage + " " + positions;
+        return Objects.equals(homePage, that.homePage) && Objects.equals(positions, that.positions);
     }
 
     @Override
@@ -59,7 +58,16 @@ public class Organization {
         return Objects.hash(homePage, positions);
     }
 
-    public static class Position {
+    @Override
+    public String toString() {
+        return homePage + " " + positions;
+    }
+
+
+    public static class Position implements Serializable {
+        @Serial
+        private static final long serialVersionUID = 1L;
+
         private final LocalDate startDate;
         private final LocalDate endDate;
         private final String description;
@@ -83,8 +91,8 @@ public class Organization {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            Position that = (Position) o;
-            return startDate.equals(that.startDate) && endDate.equals(that.endDate) && Objects.equals(description, that.description) && title.equals(that.title);
+            Position position = (Position) o;
+            return startDate.equals(position.startDate) && endDate.equals(position.endDate) && Objects.equals(description, position.description) && title.equals(position.title);
         }
 
         @Override
