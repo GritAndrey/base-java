@@ -2,17 +2,20 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.strategy.SerializationStrategy;
 
 import java.io.*;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
+public class FileStorage extends AbstractStorage<File> {
     private final File storageDir;
+    private SerializationStrategy strategy;
 
-    protected AbstractFileStorage(File storageDir) {
+    protected FileStorage(File storageDir, SerializationStrategy strategy) {
         Objects.requireNonNull(storageDir, "Directory must not be null");
+        this.strategy = strategy;
         if (!storageDir.isDirectory()) {
             throw new IllegalArgumentException(storageDir + " not a Directory ");
         }
@@ -46,7 +49,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void makeUpdate(File key, Resume resume) {
         try {
-            write(new BufferedOutputStream(new FileOutputStream(key)), resume);
+            strategy.write(new BufferedOutputStream(new FileOutputStream(key)), resume);
         } catch (IOException e) {
             throw new StorageException("File IOError", key.toString(), e);
         }
@@ -75,7 +78,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected Resume makeGet(File key) {
         try {
-            return read(new BufferedInputStream(new FileInputStream(key)));
+            return strategy.read(new BufferedInputStream(new FileInputStream(key)));
         } catch (IOException e) {
             throw new StorageException("File IOError", key.toString(), e);
         }
@@ -92,8 +95,4 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
             return storageDir.listFiles();
         throw new StorageException("empty dir", null);
     }
-
-    protected abstract Resume read(InputStream is) throws IOException;
-
-    protected abstract void write(OutputStream os, Resume resume) throws IOException;
 }

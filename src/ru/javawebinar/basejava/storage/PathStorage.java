@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.strategy.SerializationStrategy;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -10,11 +11,13 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
     private final Path storageDir;
+    private SerializationStrategy strategy;
 
-    protected AbstractPathStorage(String dir) {
+    protected PathStorage(String dir, SerializationStrategy strategy) {
         storageDir = Paths.get(dir);
+        this.strategy = strategy;
         Objects.requireNonNull(storageDir, "Directory must not be null");
         if (!Files.isDirectory(storageDir) || !Files.isWritable(storageDir)) {
             throw new IllegalArgumentException(storageDir + " not a Directory ");
@@ -52,7 +55,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void makeUpdate(Path key, Resume resume) {
         try {
-            write(new BufferedOutputStream(new FileOutputStream(key.toFile())), resume);
+            strategy.write(new BufferedOutputStream(new FileOutputStream(key.toFile())), resume);
         } catch (IOException e) {
             throw new StorageException("File IOError", key.toString(), e);
         }
@@ -75,7 +78,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume makeGet(Path key) {
         try {
-            return read(new BufferedInputStream(new FileInputStream(key.toFile())));
+            return strategy.read(new BufferedInputStream(new FileInputStream(key.toFile())));
         } catch (IOException e) {
             throw new StorageException("File IOError", key.toString(), e);
         }
@@ -91,7 +94,4 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     }
 
 
-    protected abstract Resume read(InputStream is) throws IOException;
-
-    protected abstract void write(OutputStream os, Resume resume) throws IOException;
 }
