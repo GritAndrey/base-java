@@ -3,7 +3,7 @@ package ru.javawebinar.basejava.model;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public class TextSection implements Section<String> {
+public class TextSection extends Section {
     private final String content;
 
     public TextSection(String content) {
@@ -11,9 +11,15 @@ public class TextSection implements Section<String> {
         this.content = content;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Stream<String> getContent() {
         return Stream.of(content);
+    }
+
+    @Override
+    public String toString() {
+        return content;
     }
 
     @Override

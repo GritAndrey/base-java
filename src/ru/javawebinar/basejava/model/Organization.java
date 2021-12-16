@@ -11,19 +11,19 @@ import java.util.Objects;
 
 import static ru.javawebinar.basejava.util.DateUtil.NOW;
 
-public class Experience {
+public class Organization {
 
     private final Link homePage;
 
-    private final List<WorkPosition> workPositions = new ArrayList<>() {
+    private final List<Position> positions = new ArrayList<>() {
         @Override
         public String toString() {
-            Iterator<WorkPosition> it = iterator();
+            Iterator<Position> it = iterator();
             if (!it.hasNext())
                 return "";
             StringBuilder sb = new StringBuilder();
             for (; ; ) {
-                WorkPosition e = it.next();
+                Position e = it.next();
                 sb.append(e);
                 if (!it.hasNext())
                     return sb.toString();
@@ -32,52 +32,52 @@ public class Experience {
         }
     };
 
-    public Experience(String name, String url, LocalDate startDate, LocalDate endDate, String title, String description) {
+    public Organization(String name, String url, LocalDate startDate, LocalDate endDate, String title, String description) {
         this.homePage = new Link(name, url);
-        workPositions.add(new WorkPosition(startDate, endDate, title, description));
+        positions.add(new Position(startDate, endDate, title, description));
     }
 
     public Link getHomePage() {
         return homePage;
     }
 
-    public List<WorkPosition> getWorkPositions() {
-        return workPositions;
+    public List<Position> getWorkPositions() {
+        return positions;
     }
 
     public void addWorkPosition(LocalDate startDate, LocalDate endDate, String title, String description) {
-        workPositions.add(new WorkPosition(startDate, endDate, title, description));
+        positions.add(new Position(startDate, endDate, title, description));
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Experience that = (Experience) o;
-        return homePage.equals(that.homePage) && workPositions.equals(that.workPositions);
+        Organization that = (Organization) o;
+        return homePage.equals(that.homePage) && positions.equals(that.positions);
     }
 
     @Override
     public String toString() {
-        return homePage + " " + workPositions;
+        return homePage + " " + positions;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(homePage, workPositions);
+        return Objects.hash(homePage, positions);
     }
 
-    public static class WorkPosition {
+    public static class Position {
         private final LocalDate startDate;
         private final LocalDate endDate;
         private final String description;
         private final String title;
 
-        public WorkPosition(int startYear, Month startMonth, String title, String description) {
+        public Position(int startYear, Month startMonth, String title, String description) {
             this(DateUtil.of(startYear, startMonth), NOW, title, description);
         }
 
-        public WorkPosition(LocalDate startDate, LocalDate endDate, String title, String description) {
+        public Position(LocalDate startDate, LocalDate endDate, String title, String description) {
             Objects.requireNonNull(startDate, "startDate must not be null");
             Objects.requireNonNull(endDate, "endDate must not be null");
             Objects.requireNonNull(title, "title must not be null");
@@ -91,7 +91,7 @@ public class Experience {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            WorkPosition that = (WorkPosition) o;
+            Position that = (Position) o;
             return startDate.equals(that.startDate) && endDate.equals(that.endDate) && Objects.equals(description, that.description) && title.equals(that.title);
         }
 
