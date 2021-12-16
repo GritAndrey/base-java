@@ -5,7 +5,7 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.io.*;
 
-public class SimpleFileStrategy implements SerializationStrategy {
+public class ObjectStreamStrategy implements SerializationStrategy {
     @Override
     public Resume read(InputStream is) throws IOException {
         try (ObjectInputStream ois = new ObjectInputStream(is)) {

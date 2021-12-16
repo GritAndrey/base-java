@@ -27,13 +27,12 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        Arrays.stream(getNotNullFilesList()).forEach(this::makeDelete);
+        Arrays.stream(getFilesList()).forEach(this::makeDelete);
     }
 
     @Override
     public int size() {
-        String[] list = storageDir.list();
-        return list == null ? 0 : list.length;
+        return getFilesList().length;
     }
 
     @Override
@@ -58,10 +57,8 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected void makeSave(File key, Resume resume) {
         try {
-            boolean result = key.createNewFile();
-            if (!result) {
-                throw new Error("Impossible");
-            }
+            //noinspection ResultOfMethodCallIgnored
+            key.createNewFile();
         } catch (IOException e) {
             throw new StorageException("Couldn't create file " + key.getAbsolutePath(), key.getName(), e);
         }
@@ -86,13 +83,14 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected Stream<Resume> getStorageStream() {
-        return Arrays.stream(getNotNullFilesList()).map(this::makeGet);
+        return Arrays.stream(getFilesList()).map(this::makeGet);
 
     }
 
-    private File[] getNotNullFilesList() {
-        if (storageDir.listFiles() != null)
+    private File[] getFilesList() {
+        if (storageDir.listFiles() != null) {
             return storageDir.listFiles();
+        }
         throw new StorageException("empty dir", null);
     }
 }

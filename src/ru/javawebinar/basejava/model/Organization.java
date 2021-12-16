@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,22 +18,7 @@ public class Organization implements Serializable {
 
     private final Link homePage;
 
-    private final List<Position> positions = new ArrayList<>() {
-        @Override
-        public String toString() {
-            Iterator<Position> it = iterator();
-            if (!it.hasNext())
-                return "";
-            StringBuilder sb = new StringBuilder();
-            for (; ; ) {
-                Position e = it.next();
-                sb.append(e);
-                if (!it.hasNext())
-                    return sb.toString();
-                sb.append(';').append(' ');
-            }
-        }
-    };
+    private final List<Position> positions = new ArrayList<>();
 
     public Organization(String name, String url, LocalDate startDate, LocalDate endDate, String title, String description) {
         this.homePage = new Link(name, url);
@@ -92,7 +76,10 @@ public class Organization implements Serializable {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Position position = (Position) o;
-            return startDate.equals(position.startDate) && endDate.equals(position.endDate) && Objects.equals(description, position.description) && title.equals(position.title);
+            return startDate.equals(position.startDate)
+                    && endDate.equals(position.endDate)
+                    && Objects.equals(description, position.description)
+                    && title.equals(position.title);
         }
 
         @Override
