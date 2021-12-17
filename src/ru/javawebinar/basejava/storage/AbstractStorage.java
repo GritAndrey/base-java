@@ -7,6 +7,7 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class AbstractStorage<SK> implements Storage {
@@ -69,7 +70,7 @@ public abstract class AbstractStorage<SK> implements Storage {
         LOG.info("getAllSorted");
         return getStorageStream()
                 .sorted()
-                .toList();
+                .collect(Collectors.toList());
     }
 
     protected abstract Stream<Resume> getStorageStream();
