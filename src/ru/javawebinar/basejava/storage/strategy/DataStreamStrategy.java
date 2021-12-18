@@ -16,7 +16,7 @@ public class DataStreamStrategy implements SerializationStrategy {
             Resume resume = new Resume(dis.readUTF(), dis.readUTF());
 
             int contactsSize = dis.readInt();
-            readContacts(dis, resume, contactsSize);
+            resume.getContacts().putAll(readContacts(dis, contactsSize));
 
             int sectionsSize = dis.readInt();
             resume.getSections().putAll(readSections(dis, sectionsSize));
@@ -99,12 +99,12 @@ public class DataStreamStrategy implements SerializationStrategy {
         }
     }
 
-    private void readContacts(DataInputStream dis, Resume resume, int contactsSize) throws IOException {
+    private Map<ContactType, String> readContacts(DataInputStream dis, int contactsSize) throws IOException {
+        Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
         for (int con = 0; con < contactsSize; con++) {
-            ContactType contactType = ContactType.valueOf(dis.readUTF());
-            String contactValue = dis.readUTF();
-            resume.addContact(contactType, contactValue);
+            contacts.put(ContactType.valueOf(dis.readUTF()), dis.readUTF());
         }
+        return contacts;
     }
 
     private Map<SectionType, Section> readSections(DataInputStream dis, int sectionsSize) throws IOException {
