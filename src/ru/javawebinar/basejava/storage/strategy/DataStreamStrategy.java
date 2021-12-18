@@ -49,7 +49,6 @@ public class DataStreamStrategy implements SerializationStrategy {
             dos.writeUTF(entry.getKey().name());
             switch (entry.getKey()) {
                 case PERSONAL, OBJECTIVE -> dos.writeUTF(entry.getValue().toString());
-
                 case ACHIEVEMENT, QUALIFICATIONS -> {
                     final List<String> items = ((ListSection) entry.getValue()).getItems();
                     dos.writeInt(items.size());
@@ -57,22 +56,25 @@ public class DataStreamStrategy implements SerializationStrategy {
                         dos.writeUTF(item);
                     }
                 }
-
                 case EXPERIENCE, EDUCATION -> {
                     final List<Organization> organizations = ((OrganizationSection) entry.getValue()).getOrganizations();
                     dos.writeInt(organizations.size());
-                    for (Organization organization : organizations) {
-                        final Link homePage = organization.getHomePage();
-                        dos.writeUTF(homePage.getName());
-                        if (homePage.getUrl() != null) {
-                            dos.writeUTF(homePage.getUrl());
-                        } else {
-                            dos.writeUTF("");
-                        }
-                        writePositions(dos, organization);
-                    }
+                    writeOrganizations(dos, organizations);
                 }
             }
+        }
+    }
+
+    private void writeOrganizations(DataOutputStream dos, List<Organization> organizations) throws IOException {
+        for (Organization organization : organizations) {
+            final Link homePage = organization.getHomePage();
+            dos.writeUTF(homePage.getName());
+            if (homePage.getUrl() != null) {
+                dos.writeUTF(homePage.getUrl());
+            } else {
+                dos.writeUTF("");
+            }
+            writePositions(dos, organization);
         }
     }
 
@@ -99,7 +101,6 @@ public class DataStreamStrategy implements SerializationStrategy {
             SectionType sectionType = SectionType.valueOf(dis.readUTF());
             switch (sectionType) {
                 case PERSONAL, OBJECTIVE -> sections.put(sectionType, new TextSection(dis.readUTF()));
-
                 case ACHIEVEMENT, QUALIFICATIONS -> {
                     final int stringsCount = dis.readInt();
                     final ListSection listSection = new ListSection(new ArrayList<>());
@@ -109,23 +110,27 @@ public class DataStreamStrategy implements SerializationStrategy {
                     }
                     sections.put(sectionType, listSection);
                 }
-
                 case EXPERIENCE, EDUCATION -> {
                     final int organizationsCount = dis.readInt();
-                    List<Organization> organizations = new ArrayList<>();
-                    for (int j = 0; j < organizationsCount; j++) {
-                        String orgName = dis.readUTF();
-                        String url = dis.readUTF();
-                        url = url.equals("") ? null : url;
-                        int positionsCount = dis.readInt();
-                        List<Organization.Position> positions = readPositions(dis, positionsCount);
-                        organizations.add(new Organization(new Link(orgName, url), positions));
-                    }
+                    List<Organization> organizations = readOrganizations(dis, organizationsCount);
                     sections.put(sectionType, new OrganizationSection(organizations));
                 }
             }
         }
         return sections;
+    }
+
+    private List<Organization> readOrganizations(DataInputStream dis, int organizationsCount) throws IOException {
+        List<Organization> organizations = new ArrayList<>();
+        for (int j = 0; j < organizationsCount; j++) {
+            String orgName = dis.readUTF();
+            String url = dis.readUTF();
+            url = url.equals("") ? null : url;
+            int positionsCount = dis.readInt();
+            List<Organization.Position> positions = readPositions(dis, positionsCount);
+            organizations.add(new Organization(new Link(orgName, url), positions));
+        }
+        return organizations;
     }
 
     private List<Organization.Position> readPositions(DataInputStream dis, int positionsCount) throws IOException {
