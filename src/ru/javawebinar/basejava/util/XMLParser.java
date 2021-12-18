@@ -18,7 +18,7 @@ public class XMLParser {
             JAXBContext ctx = JAXBContext.newInstance(classesToBeBound);
 
             marshaller = ctx.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_ENCODING, StandardCharsets.UTF_8);
+            marshaller.setProperty(Marshaller.JAXB_ENCODING, StandardCharsets.UTF_8.toString());
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             //marshaller.setProperty(Marshaller.JAXB_FRAGMENT,true);
             unmarshaller = ctx.createUnmarshaller();

@@ -1,7 +1,11 @@
 package ru.javawebinar.basejava.model;
 
 import ru.javawebinar.basejava.util.DateUtil;
+import ru.javawebinar.basejava.util.LocalDateAdapter;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -12,18 +16,21 @@ import java.util.Objects;
 
 import static ru.javawebinar.basejava.util.DateUtil.NOW;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-
-    private final Link homePage;
-
     private final List<Position> positions = new ArrayList<>();
+    private Link homePage;
+
+    public Organization() {
+    }
 
     public Organization(String name, String url, LocalDate startDate, LocalDate endDate, String title, String description) {
         this.homePage = new Link(name, url);
         positions.add(new Position(startDate, endDate, title, description));
     }
+
 
     public void addWorkPosition(LocalDate startDate, LocalDate endDate, String title, String description) {
         positions.add(new Position(startDate, endDate, title, description));
@@ -47,15 +54,19 @@ public class Organization implements Serializable {
         return homePage + " " + positions;
     }
 
-
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
         @Serial
         private static final long serialVersionUID = 1L;
+        @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
+        private LocalDate startDate;
+        @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
+        private LocalDate endDate;
+        private String description;
+        private String title;
 
-        private final LocalDate startDate;
-        private final LocalDate endDate;
-        private final String description;
-        private final String title;
+        public Position() {
+        }
 
         public Position(int startYear, Month startMonth, String title, String description) {
             this(DateUtil.of(startYear, startMonth), NOW, title, description);
