@@ -43,6 +43,13 @@ public class OrganizationSection extends Section {
         return Objects.hash(organizations);
     }
 
+    @Override
+    public String toString() {
+        return "OrganizationSection{" +
+                "organizations=" + organizations +
+                '}';
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public Stream<Organization> getContent() {

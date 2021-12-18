@@ -31,6 +31,18 @@ public class Organization implements Serializable {
         positions.add(new Position(startDate, endDate, title, description));
     }
 
+    public Organization(Link homepage, List<Position> positions) {
+        this.positions.addAll(positions);
+        this.homePage = homepage;
+    }
+
+    public List<Position> getPositions() {
+        return positions;
+    }
+
+    public Link getHomePage() {
+        return homePage;
+    }
 
     public void addWorkPosition(LocalDate startDate, LocalDate endDate, String title, String description) {
         positions.add(new Position(startDate, endDate, title, description));
@@ -80,6 +92,26 @@ public class Organization implements Serializable {
             this.endDate = endDate;
             this.title = title;
             this.description = description;
+        }
+
+        public Position(int startYear, Month startMonth, int endYear, Month endMonth, String title, String description) {
+            this(DateUtil.of(startYear, startMonth), DateUtil.of(endYear, endMonth), title, description);
+        }
+
+        public LocalDate getStartDate() {
+            return startDate;
+        }
+
+        public LocalDate getEndDate() {
+            return endDate;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public String getTitle() {
+            return title;
         }
 
         @Override

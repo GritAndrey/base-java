@@ -39,7 +39,7 @@ public class SectionFactory {
                 Organization org2 = new Organization("org" + (int) (Math.random() * 100), "www.site2.org",
                         DateUtil.of(2002, Month.FEBRUARY), DateUtil.of(2005, Month.MARCH), "title2", "do some work 2");
                 Organization org3 = new Organization("org" + (int) (Math.random() * 100), "www.site3.org",
-                        DateUtil.of(2005, Month.AUGUST), LocalDate.now(), "title3", "do some work 3");
+                        DateUtil.of(2005, Month.AUGUST), DateUtil.of(2010, Month.AUGUST), "title3", "do some work 3");
                 return new OrganizationSection(org1, org2, org3);
             }
             case EDUCATION -> {

@@ -3,8 +3,10 @@ package ru.javawebinar.basejava.storage.strategy;
 import ru.javawebinar.basejava.model.*;
 
 import java.io.*;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 public class DataStreamStrategy implements SerializationStrategy {
@@ -65,8 +67,30 @@ public class DataStreamStrategy implements SerializationStrategy {
                 }
 
                 case EXPERIENCE, EDUCATION -> {
+                    dos.writeInt(((OrganizationSection) entry.getValue()).getOrganizations().size());
+                    for (Organization organization : ((OrganizationSection) entry.getValue()).getOrganizations()) {
+                        dos.writeUTF(organization.getHomePage().getName());
+                        if (organization.getHomePage().getUrl() != null) {
+                            dos.writeUTF(organization.getHomePage().getUrl());
+                        } else {
+                            dos.writeUTF("");
+                        }
+                        final List<Organization.Position> positions = organization.getPositions();
+                        dos.writeInt(positions.size());
+                        for (Organization.Position position : positions) {
+                            dos.writeInt(position.getStartDate().getYear());
+                            dos.writeUTF(position.getStartDate().getMonth().name());
+                            dos.writeInt(position.getEndDate().getYear());
+                            dos.writeUTF(position.getEndDate().getMonth().name());
+                            dos.writeUTF(position.getTitle());
+                            if (position.getDescription() != null) {
+                                dos.writeUTF(position.getDescription());
+                            } else {
+                                dos.writeUTF("");
+                            }
+                        }
+                    }
                 }
-
             }
         }
     }
@@ -77,9 +101,7 @@ public class DataStreamStrategy implements SerializationStrategy {
             SectionType sectionType = SectionType.valueOf(dis.readUTF());
             switch (sectionType) {
 
-                case PERSONAL, OBJECTIVE -> {
-                    sections.put(sectionType, new TextSection(dis.readUTF()));
-                }
+                case PERSONAL, OBJECTIVE -> sections.put(sectionType, new TextSection(dis.readUTF()));
 
                 case ACHIEVEMENT, QUALIFICATIONS -> {
                     final int stringsCount = dis.readInt();
@@ -90,6 +112,27 @@ public class DataStreamStrategy implements SerializationStrategy {
                     sections.put(sectionType, listSection);
                 }
                 case EXPERIENCE, EDUCATION -> {
+                    final int organizationsCount = dis.readInt();
+                    List<Organization> organizations = new ArrayList<>();
+                    for (int j = 0; j < organizationsCount; j++) {
+                        String orgName = dis.readUTF();
+                        String url = dis.readUTF();
+                        url = url.equals("") ? null : url;
+                        int positionsCount = dis.readInt();
+                        List<Organization.Position> positions = new ArrayList<>(positionsCount);
+                        for (int po = 0; po < positionsCount; po++) {
+                            int startYear = dis.readInt();
+                            Month startMonth = Month.valueOf(dis.readUTF());
+                            int endYear = dis.readInt();
+                            Month endMonth = Month.valueOf(dis.readUTF());
+                            String title = dis.readUTF();
+                            String description = dis.readUTF();
+                            description = description.equals("") ? null : description;
+                            positions.add(new Organization.Position(startYear, startMonth, endYear, endMonth, title, description));
+                        }
+                        organizations.add(new Organization(new Link(orgName, url), positions));
+                    }
+                    sections.put(sectionType, new OrganizationSection(organizations));
                 }
             }
         }
