@@ -85,7 +85,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             return Files.list(storageDir);
         } catch (IOException e) {
-            throw new StorageException(" Storage directory I/O error", null, e);
+            throw new StorageException(" Storage directory I/O error", e);
         }
     }
 }
