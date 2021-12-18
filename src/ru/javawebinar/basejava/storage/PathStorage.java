@@ -4,7 +4,9 @@ import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.storage.strategy.SerializationStrategy;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,7 +49,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected void makeUpdate(Path key, Resume resume) {
         try {
-            strategy.write(new BufferedOutputStream(new FileOutputStream(key.toFile())), resume);
+            strategy.write(new BufferedOutputStream(Files.newOutputStream(key)), resume);
         } catch (IOException e) {
             throw new StorageException("File IOError", key.toString(), e);
         }
@@ -70,7 +72,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume makeGet(Path key) {
         try {
-            return strategy.read(new BufferedInputStream(new FileInputStream(key.toFile())));
+            return strategy.read(new BufferedInputStream(Files.newInputStream(key)));
         } catch (IOException e) {
             throw new StorageException("File IOError", key.toString(), e);
         }
