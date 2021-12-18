@@ -6,7 +6,7 @@ import ru.javawebinar.basejava.util.JsonParser;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class JsonStrategy implements SerializationStrategy {
+public class JsonStreamStrategy implements SerializationStrategy {
     @Override
     public Resume read(InputStream is) throws IOException {
         try (Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {

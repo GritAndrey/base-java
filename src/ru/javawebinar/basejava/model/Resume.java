@@ -18,10 +18,9 @@ import java.util.UUID;
 public class Resume implements Comparable<Resume>, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-
-    private String uuid;
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
     private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
+    private String uuid;
     private String fullName;
 
 
@@ -67,6 +66,15 @@ public class Resume implements Comparable<Resume>, Serializable {
         this.fullName = fullName;
     }
 
+    public void addContact(ContactType type, String value) {
+        contacts.put(type, value);
+    }
+
+    public void addSection(SectionType type, Section section) {
+        sections.put(type, section);
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -85,7 +93,7 @@ public class Resume implements Comparable<Resume>, Serializable {
 
     @Override
     public String toString() {
-        return fullName + " uuid: " + uuid;
+        return fullName + " uuid: " + uuid + contacts + sections;
     }
 
     @Override

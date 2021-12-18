@@ -1,11 +1,10 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.storage.strategy.ObjectStreamStrategy;
-import ru.javawebinar.basejava.storage.strategy.XmlStrategy;
+import ru.javawebinar.basejava.storage.strategy.XmlStreamStrategy;
 
 public class XmlPathStorageTest extends AbstractStorageTest {
 
     public XmlPathStorageTest() {
-        super(new PathStorage(STORAGE_DIR.getAbsolutePath(), new XmlStrategy()));
+        super(new PathStorage(STORAGE_DIR.getAbsolutePath(), new XmlStreamStrategy()));
     }
 }
