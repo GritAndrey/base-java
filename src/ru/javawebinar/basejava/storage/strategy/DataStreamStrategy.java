@@ -48,49 +48,47 @@ public class DataStreamStrategy implements SerializationStrategy {
         for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
             dos.writeUTF(entry.getKey().name());
             switch (entry.getKey()) {
-                case PERSONAL, OBJECTIVE -> entry.getValue().getContent().forEach(o -> {
-                    try {
-                        dos.writeUTF(o.toString());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
+                case PERSONAL, OBJECTIVE -> dos.writeUTF(entry.getValue().toString());
+
                 case ACHIEVEMENT, QUALIFICATIONS -> {
-                    dos.writeInt((int) entry.getValue().getContent().count());
-                    entry.getValue().getContent().forEach(o -> {
-                        try {
-                            dos.writeUTF(o.toString());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    });
+                    final List<String> items = ((ListSection) entry.getValue()).getItems();
+                    dos.writeInt(items.size());
+                    for (String item : items) {
+                        dos.writeUTF(item);
+                    }
                 }
 
                 case EXPERIENCE, EDUCATION -> {
-                    dos.writeInt(((OrganizationSection) entry.getValue()).getOrganizations().size());
-                    for (Organization organization : ((OrganizationSection) entry.getValue()).getOrganizations()) {
-                        dos.writeUTF(organization.getHomePage().getName());
-                        if (organization.getHomePage().getUrl() != null) {
-                            dos.writeUTF(organization.getHomePage().getUrl());
+                    final List<Organization> organizations = ((OrganizationSection) entry.getValue()).getOrganizations();
+                    dos.writeInt(organizations.size());
+                    for (Organization organization : organizations) {
+                        final Link homePage = organization.getHomePage();
+                        dos.writeUTF(homePage.getName());
+                        if (homePage.getUrl() != null) {
+                            dos.writeUTF(homePage.getUrl());
                         } else {
                             dos.writeUTF("");
                         }
-                        final List<Organization.Position> positions = organization.getPositions();
-                        dos.writeInt(positions.size());
-                        for (Organization.Position position : positions) {
-                            dos.writeInt(position.getStartDate().getYear());
-                            dos.writeUTF(position.getStartDate().getMonth().name());
-                            dos.writeInt(position.getEndDate().getYear());
-                            dos.writeUTF(position.getEndDate().getMonth().name());
-                            dos.writeUTF(position.getTitle());
-                            if (position.getDescription() != null) {
-                                dos.writeUTF(position.getDescription());
-                            } else {
-                                dos.writeUTF("");
-                            }
-                        }
+                        writePositions(dos, organization);
                     }
                 }
+            }
+        }
+    }
+
+    private void writePositions(DataOutputStream dos, Organization organization) throws IOException {
+        final List<Organization.Position> positions = organization.getPositions();
+        dos.writeInt(positions.size());
+        for (Organization.Position position : positions) {
+            dos.writeInt(position.getStartDate().getYear());
+            dos.writeUTF(position.getStartDate().getMonth().name());
+            dos.writeInt(position.getEndDate().getYear());
+            dos.writeUTF(position.getEndDate().getMonth().name());
+            dos.writeUTF(position.getTitle());
+            if (position.getDescription() != null) {
+                dos.writeUTF(position.getDescription());
+            } else {
+                dos.writeUTF("");
             }
         }
     }
@@ -100,17 +98,18 @@ public class DataStreamStrategy implements SerializationStrategy {
         for (int i = 0; i < sectionsSize; i++) {
             SectionType sectionType = SectionType.valueOf(dis.readUTF());
             switch (sectionType) {
-
                 case PERSONAL, OBJECTIVE -> sections.put(sectionType, new TextSection(dis.readUTF()));
 
                 case ACHIEVEMENT, QUALIFICATIONS -> {
                     final int stringsCount = dis.readInt();
                     final ListSection listSection = new ListSection(new ArrayList<>());
+                    final List<String> items = listSection.getItems();
                     for (int j = 0; j < stringsCount; j++) {
-                        listSection.getItems().add(dis.readUTF());
+                        items.add(dis.readUTF());
                     }
                     sections.put(sectionType, listSection);
                 }
+
                 case EXPERIENCE, EDUCATION -> {
                     final int organizationsCount = dis.readInt();
                     List<Organization> organizations = new ArrayList<>();
@@ -119,17 +118,7 @@ public class DataStreamStrategy implements SerializationStrategy {
                         String url = dis.readUTF();
                         url = url.equals("") ? null : url;
                         int positionsCount = dis.readInt();
-                        List<Organization.Position> positions = new ArrayList<>(positionsCount);
-                        for (int po = 0; po < positionsCount; po++) {
-                            int startYear = dis.readInt();
-                            Month startMonth = Month.valueOf(dis.readUTF());
-                            int endYear = dis.readInt();
-                            Month endMonth = Month.valueOf(dis.readUTF());
-                            String title = dis.readUTF();
-                            String description = dis.readUTF();
-                            description = description.equals("") ? null : description;
-                            positions.add(new Organization.Position(startYear, startMonth, endYear, endMonth, title, description));
-                        }
+                        List<Organization.Position> positions = readPositions(dis, positionsCount);
                         organizations.add(new Organization(new Link(orgName, url), positions));
                     }
                     sections.put(sectionType, new OrganizationSection(organizations));
@@ -137,5 +126,20 @@ public class DataStreamStrategy implements SerializationStrategy {
             }
         }
         return sections;
+    }
+
+    private List<Organization.Position> readPositions(DataInputStream dis, int positionsCount) throws IOException {
+        List<Organization.Position> positions = new ArrayList<>(positionsCount);
+        for (int po = 0; po < positionsCount; po++) {
+            int startYear = dis.readInt();
+            Month startMonth = Month.valueOf(dis.readUTF());
+            int endYear = dis.readInt();
+            Month endMonth = Month.valueOf(dis.readUTF());
+            String title = dis.readUTF();
+            String description = dis.readUTF();
+            description = description.equals("") ? null : description;
+            positions.add(new Organization.Position(startYear, startMonth, endYear, endMonth, title, description));
+        }
+        return positions;
     }
 }
