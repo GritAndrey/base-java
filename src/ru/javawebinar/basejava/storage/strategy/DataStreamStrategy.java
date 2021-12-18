@@ -16,13 +16,11 @@ public class DataStreamStrategy implements SerializationStrategy {
             Resume resume = new Resume(dis.readUTF(), dis.readUTF());
 
             int contactsSize = dis.readInt();
-            for (int con = 0; con < contactsSize; con++) {
-                ContactType contactType = ContactType.valueOf(dis.readUTF());
-                String contactValue = dis.readUTF();
-                resume.addContact(contactType, contactValue);
-            }
+            readContacts(dis, resume, contactsSize);
+
             int sectionsSize = dis.readInt();
             resume.getSections().putAll(readSections(dis, sectionsSize));
+
             return resume;
         }
     }
@@ -32,15 +30,21 @@ public class DataStreamStrategy implements SerializationStrategy {
         try (DataOutputStream dos = new DataOutputStream(os)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
+
             Map<ContactType, String> contacts = resume.getContacts();
             dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-                dos.writeUTF(entry.getKey().name());
-                dos.writeUTF(entry.getValue());
-            }
+            writeContacts(dos, contacts);
+
             Map<SectionType, Section> sections = resume.getSections();
             dos.writeInt(sections.size());
             writeSections(dos, sections);
+        }
+    }
+
+    private void writeContacts(DataOutputStream dos, Map<ContactType, String> contacts) throws IOException {
+        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+            dos.writeUTF(entry.getKey().name());
+            dos.writeUTF(entry.getValue());
         }
     }
 
@@ -95,6 +99,14 @@ public class DataStreamStrategy implements SerializationStrategy {
         }
     }
 
+    private void readContacts(DataInputStream dis, Resume resume, int contactsSize) throws IOException {
+        for (int con = 0; con < contactsSize; con++) {
+            ContactType contactType = ContactType.valueOf(dis.readUTF());
+            String contactValue = dis.readUTF();
+            resume.addContact(contactType, contactValue);
+        }
+    }
+
     private Map<SectionType, Section> readSections(DataInputStream dis, int sectionsSize) throws IOException {
         Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
         for (int i = 0; i < sectionsSize; i++) {
@@ -103,7 +115,7 @@ public class DataStreamStrategy implements SerializationStrategy {
                 case PERSONAL, OBJECTIVE -> sections.put(sectionType, new TextSection(dis.readUTF()));
                 case ACHIEVEMENT, QUALIFICATIONS -> {
                     final int stringsCount = dis.readInt();
-                    final ListSection listSection = new ListSection(new ArrayList<>());
+                    final ListSection listSection = new ListSection(new ArrayList<>(stringsCount));
                     final List<String> items = listSection.getItems();
                     for (int j = 0; j < stringsCount; j++) {
                         items.add(dis.readUTF());
