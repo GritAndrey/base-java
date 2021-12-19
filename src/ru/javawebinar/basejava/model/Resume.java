@@ -1,8 +1,13 @@
 package ru.javawebinar.basejava.model;
 
+import ru.javawebinar.basejava.util.ContactsAdapter;
+import ru.javawebinar.basejava.util.SectionsAdapter;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.EnumMap;
@@ -15,10 +20,13 @@ import java.util.UUID;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(propOrder = {"uuid", "fullName", "contacts", "sections"})
 public class Resume implements Comparable<Resume>, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
+    @XmlJavaTypeAdapter(value = ContactsAdapter.class)
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    @XmlJavaTypeAdapter(value = SectionsAdapter.class)
     private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
     private String uuid;
     private String fullName;

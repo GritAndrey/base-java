@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.model;
 
+import javax.xml.bind.annotation.XmlElement;
 import java.io.Serial;
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.stream.Stream;
 public class OrganizationSection extends Section {
     @Serial
     private static final long serialVersionUID = 1L;
-
+    @XmlElement(name = "organization")
     private List<Organization> organizations;
 
     public OrganizationSection() {

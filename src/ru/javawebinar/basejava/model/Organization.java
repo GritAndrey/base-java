@@ -5,6 +5,8 @@ import ru.javawebinar.basejava.util.LocalDateAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serial;
 import java.io.Serializable;
@@ -17,9 +19,11 @@ import java.util.Objects;
 import static ru.javawebinar.basejava.util.DateUtil.NOW;
 
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(propOrder = {"homePage", "positions"})
 public class Organization implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
+    @XmlElement(name = "position")
     private final List<Position> positions = new ArrayList<>();
     private Link homePage;
 
