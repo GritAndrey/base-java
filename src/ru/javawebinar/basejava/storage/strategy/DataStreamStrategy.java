@@ -3,6 +3,7 @@ package ru.javawebinar.basejava.storage.strategy;
 import ru.javawebinar.basejava.model.*;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -86,10 +87,12 @@ public class DataStreamStrategy implements SerializationStrategy {
         final List<Organization.Position> positions = organization.getPositions();
         dos.writeInt(positions.size());
         for (Organization.Position position : positions) {
-            dos.writeInt(position.getStartDate().getYear());
-            dos.writeUTF(position.getStartDate().getMonth().name());
-            dos.writeInt(position.getEndDate().getYear());
-            dos.writeUTF(position.getEndDate().getMonth().name());
+            final LocalDate startDate = position.getStartDate();
+            final LocalDate endDate = position.getEndDate();
+            dos.writeInt(startDate.getYear());
+            dos.writeUTF(startDate.getMonth().name());
+            dos.writeInt(endDate.getYear());
+            dos.writeUTF(endDate.getMonth().name());
             dos.writeUTF(position.getTitle());
             if (position.getDescription() != null) {
                 dos.writeUTF(position.getDescription());
