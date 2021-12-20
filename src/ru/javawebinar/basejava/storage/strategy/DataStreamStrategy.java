@@ -53,10 +53,7 @@ public class DataStreamStrategy implements SerializationStrategy {
                 }
                 case ACHIEVEMENT, QUALIFICATIONS -> {
                     final List<String> items = ((ListSection) entry.getValue()).getItems();
-                    dos.writeInt(items.size());
-                    for (String item : items) {
-                        dos.writeUTF(item);
-                    }
+                    writeCollection(items, dos, dos::writeUTF);
                 }
                 case EXPERIENCE, EDUCATION -> {
                     final List<Organization> organizations = ((OrganizationSection) entry.getValue()).getOrganizations();
