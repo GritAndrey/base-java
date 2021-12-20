@@ -1,6 +1,7 @@
 package ru.javawebinar.basejava.storage.strategy;
 
 import ru.javawebinar.basejava.model.*;
+import ru.javawebinar.basejava.util.DateUtil;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DataStreamStrategy implements SerializationStrategy {
     @Override
@@ -53,7 +55,10 @@ public class DataStreamStrategy implements SerializationStrategy {
         for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
             dos.writeUTF(entry.getKey().name());
             switch (entry.getKey()) {
-                case PERSONAL, OBJECTIVE -> dos.writeUTF(entry.getValue().toString());
+                case PERSONAL, OBJECTIVE -> {
+                    final TextSection textSection = (TextSection) entry.getValue();
+                    dos.writeUTF(textSection.getContent().collect(Collectors.joining()));
+                }
                 case ACHIEVEMENT, QUALIFICATIONS -> {
                     final List<String> items = ((ListSection) entry.getValue()).getItems();
                     dos.writeInt(items.size());
@@ -74,11 +79,7 @@ public class DataStreamStrategy implements SerializationStrategy {
         for (Organization organization : organizations) {
             final Link homePage = organization.getHomePage();
             dos.writeUTF(homePage.getName());
-            if (homePage.getUrl() != null) {
-                dos.writeUTF(homePage.getUrl());
-            } else {
-                dos.writeUTF("");
-            }
+            dos.writeUTF(homePage.getUrl() != null ? homePage.getUrl() : "");
             writePositions(dos, organization);
         }
     }
@@ -87,18 +88,16 @@ public class DataStreamStrategy implements SerializationStrategy {
         final List<Organization.Position> positions = organization.getPositions();
         dos.writeInt(positions.size());
         for (Organization.Position position : positions) {
-            final LocalDate startDate = position.getStartDate();
-            final LocalDate endDate = position.getEndDate();
-            dos.writeInt(startDate.getYear());
-            dos.writeUTF(startDate.getMonth().name());
-            dos.writeInt(endDate.getYear());
-            dos.writeUTF(endDate.getMonth().name());
+            writePositionDates(dos, position.getStartDate(), position.getEndDate());
             dos.writeUTF(position.getTitle());
-            if (position.getDescription() != null) {
-                dos.writeUTF(position.getDescription());
-            } else {
-                dos.writeUTF("");
-            }
+            dos.writeUTF(position.getDescription() != null ? position.getDescription() : "");
+        }
+    }
+
+    private void writePositionDates(DataOutputStream dos, LocalDate... localDates) throws IOException {
+        for (LocalDate localDate : localDates) {
+            dos.writeInt(localDate.getYear());
+            dos.writeUTF(localDate.getMonth().name());
         }
     }
 
@@ -151,15 +150,22 @@ public class DataStreamStrategy implements SerializationStrategy {
     private List<Organization.Position> readPositions(DataInputStream dis, int positionsCount) throws IOException {
         List<Organization.Position> positions = new ArrayList<>(positionsCount);
         for (int po = 0; po < positionsCount; po++) {
-            int startYear = dis.readInt();
-            Month startMonth = Month.valueOf(dis.readUTF());
-            int endYear = dis.readInt();
-            Month endMonth = Month.valueOf(dis.readUTF());
+            LocalDate[] positionDates = readPositionDates(dis);
             String title = dis.readUTF();
             String description = dis.readUTF();
             description = description.equals("") ? null : description;
-            positions.add(new Organization.Position(startYear, startMonth, endYear, endMonth, title, description));
+            positions.add(new Organization.Position(positionDates[0], positionDates[1], title, description));
         }
         return positions;
+    }
+
+    private LocalDate[] readPositionDates(DataInputStream dis) throws IOException {
+        int startYear = dis.readInt();
+        Month startMonth = Month.valueOf(dis.readUTF());
+        int endYear = dis.readInt();
+        Month endMonth = Month.valueOf(dis.readUTF());
+        return new LocalDate[]{
+                DateUtil.of(startYear, startMonth), DateUtil.of(endYear, endMonth)
+        };
     }
 }
