@@ -57,7 +57,7 @@ public class DataStreamStrategy implements SerializationStrategy {
                 }
                 case EXPERIENCE, EDUCATION -> {
                     final List<Organization> organizations = ((OrganizationSection) entry.getValue()).getOrganizations();
-                    DataStreamStrategy.this.writeOrganizations(dos, organizations);
+                    writeOrganizations(dos, organizations);
                 }
             }
         });
