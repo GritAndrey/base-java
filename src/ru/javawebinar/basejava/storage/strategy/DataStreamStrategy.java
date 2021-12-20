@@ -6,10 +6,7 @@ import ru.javawebinar.basejava.util.DateUtil;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DataStreamStrategy implements SerializationStrategy {
@@ -35,24 +32,22 @@ public class DataStreamStrategy implements SerializationStrategy {
             dos.writeUTF(resume.getFullName());
 
             Map<ContactType, String> contacts = resume.getContacts();
-            dos.writeInt(contacts.size());
             writeContacts(dos, contacts);
 
             Map<SectionType, Section> sections = resume.getSections();
-            dos.writeInt(sections.size());
             writeSections(dos, sections);
         }
     }
 
     private void writeContacts(DataOutputStream dos, Map<ContactType, String> contacts) throws IOException {
-        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+        writeCollection(contacts.entrySet(), dos, entry -> {
             dos.writeUTF(entry.getKey().name());
             dos.writeUTF(entry.getValue());
-        }
+        });
     }
 
     private void writeSections(DataOutputStream dos, Map<SectionType, Section> sections) throws IOException {
-        for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+        writeCollection(sections.entrySet(), dos, entry -> {
             dos.writeUTF(entry.getKey().name());
             switch (entry.getKey()) {
                 case PERSONAL, OBJECTIVE -> {
@@ -68,37 +63,37 @@ public class DataStreamStrategy implements SerializationStrategy {
                 }
                 case EXPERIENCE, EDUCATION -> {
                     final List<Organization> organizations = ((OrganizationSection) entry.getValue()).getOrganizations();
-                    dos.writeInt(organizations.size());
-                    writeOrganizations(dos, organizations);
+                    DataStreamStrategy.this.writeOrganizations(dos, organizations);
                 }
             }
-        }
+        });
     }
 
     private void writeOrganizations(DataOutputStream dos, List<Organization> organizations) throws IOException {
-        for (Organization organization : organizations) {
+        writeCollection(organizations, dos, organization -> {
             final Link homePage = organization.getHomePage();
             dos.writeUTF(homePage.getName());
             dos.writeUTF(homePage.getUrl() != null ? homePage.getUrl() : "");
             writePositions(dos, organization);
-        }
+        });
+
     }
 
     private void writePositions(DataOutputStream dos, Organization organization) throws IOException {
         final List<Organization.Position> positions = organization.getPositions();
-        dos.writeInt(positions.size());
-        for (Organization.Position position : positions) {
+        writeCollection(positions, dos, position -> {
             writePositionDates(dos, position.getStartDate(), position.getEndDate());
             dos.writeUTF(position.getTitle());
             dos.writeUTF(position.getDescription() != null ? position.getDescription() : "");
-        }
+        });
     }
 
     private void writePositionDates(DataOutputStream dos, LocalDate... localDates) throws IOException {
-        for (LocalDate localDate : localDates) {
+        writeCollection(Arrays.asList(localDates), dos, localDate -> {
             dos.writeInt(localDate.getYear());
             dos.writeUTF(localDate.getMonth().name());
-        }
+        });
+
     }
 
     private Map<ContactType, String> readContacts(DataInputStream dis, int contactsSize) throws IOException {
@@ -160,6 +155,7 @@ public class DataStreamStrategy implements SerializationStrategy {
     }
 
     private LocalDate[] readPositionDates(DataInputStream dis) throws IOException {
+        int value = dis.readInt();
         int startYear = dis.readInt();
         Month startMonth = Month.valueOf(dis.readUTF());
         int endYear = dis.readInt();
@@ -167,5 +163,16 @@ public class DataStreamStrategy implements SerializationStrategy {
         return new LocalDate[]{
                 DateUtil.of(startYear, startMonth), DateUtil.of(endYear, endMonth)
         };
+    }
+
+    private <T> void writeCollection(Collection<T> collection, DataOutputStream dos, ElementWriter<T> writer) throws IOException {
+        dos.writeInt(collection.size());
+        for (T element : collection) {
+            writer.write(element);
+        }
+    }
+
+    private interface ElementWriter<T> {
+        void write(T element) throws IOException;
     }
 }
