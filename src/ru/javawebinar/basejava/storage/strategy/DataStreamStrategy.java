@@ -31,11 +31,8 @@ public class DataStreamStrategy implements SerializationStrategy {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
 
-            Map<ContactType, String> contacts = resume.getContacts();
-            writeContacts(dos, contacts);
-
-            Map<SectionType, Section> sections = resume.getSections();
-            writeSections(dos, sections);
+            writeContacts(dos, resume.getContacts());
+            writeSections(dos, resume.getSections());
         }
     }
 
@@ -82,18 +79,16 @@ public class DataStreamStrategy implements SerializationStrategy {
     private void writePositions(DataOutputStream dos, Organization organization) throws IOException {
         final List<Organization.Position> positions = organization.getPositions();
         writeCollection(positions, dos, position -> {
-            writePositionDates(dos, position.getStartDate(), position.getEndDate());
+            writePositionDate(dos, position.getStartDate());
+            writePositionDate(dos, position.getEndDate());
             dos.writeUTF(position.getTitle());
             dos.writeUTF(position.getDescription() != null ? position.getDescription() : "");
         });
     }
 
-    private void writePositionDates(DataOutputStream dos, LocalDate... localDates) throws IOException {
-        writeCollection(Arrays.asList(localDates), dos, localDate -> {
-            dos.writeInt(localDate.getYear());
-            dos.writeUTF(localDate.getMonth().name());
-        });
-
+    private void writePositionDate(DataOutputStream dos, LocalDate localDate) throws IOException {
+        dos.writeInt(localDate.getYear());
+        dos.writeUTF(localDate.getMonth().name());
     }
 
     private Map<ContactType, String> readContacts(DataInputStream dis, int contactsSize) throws IOException {
@@ -155,7 +150,6 @@ public class DataStreamStrategy implements SerializationStrategy {
     }
 
     private LocalDate[] readPositionDates(DataInputStream dis) throws IOException {
-        int value = dis.readInt();
         int startYear = dis.readInt();
         Month startMonth = Month.valueOf(dis.readUTF());
         int endYear = dis.readInt();
