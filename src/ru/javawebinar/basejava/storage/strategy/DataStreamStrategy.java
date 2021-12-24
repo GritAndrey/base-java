@@ -47,18 +47,9 @@ public class DataStreamStrategy implements SerializationStrategy {
         writeCollection(sections.entrySet(), dos, entry -> {
             dos.writeUTF(entry.getKey().name());
             switch (entry.getKey()) {
-                case PERSONAL, OBJECTIVE -> {
-                    final TextSection textSection = (TextSection) entry.getValue();
-                    dos.writeUTF(textSection.getContent().collect(Collectors.joining()));
-                }
-                case ACHIEVEMENT, QUALIFICATIONS -> {
-                    final List<String> items = ((ListSection) entry.getValue()).getItems();
-                    writeCollection(items, dos, dos::writeUTF);
-                }
-                case EXPERIENCE, EDUCATION -> {
-                    final List<Organization> organizations = ((OrganizationSection) entry.getValue()).getOrganizations();
-                    writeOrganizations(dos, organizations);
-                }
+                case PERSONAL, OBJECTIVE -> dos.writeUTF(((TextSection) entry.getValue()).getContent().collect(Collectors.joining()));
+                case ACHIEVEMENT, QUALIFICATIONS -> writeCollection(((ListSection) entry.getValue()).getItems(), dos, dos::writeUTF);
+                case EXPERIENCE, EDUCATION -> writeOrganizations(dos, ((OrganizationSection) entry.getValue()).getOrganizations());
             }
         });
     }
@@ -67,7 +58,8 @@ public class DataStreamStrategy implements SerializationStrategy {
         writeCollection(organizations, dos, organization -> {
             final Link homePage = organization.getHomePage();
             dos.writeUTF(homePage.getName());
-            dos.writeUTF(homePage.getUrl() != null ? homePage.getUrl() : "");
+            final String url = homePage.getUrl();
+            dos.writeUTF(url != null ? url : "");
             writePositions(dos, organization);
         });
 
@@ -79,7 +71,8 @@ public class DataStreamStrategy implements SerializationStrategy {
             writePositionDate(dos, position.getStartDate());
             writePositionDate(dos, position.getEndDate());
             dos.writeUTF(position.getTitle());
-            dos.writeUTF(position.getDescription() != null ? position.getDescription() : "");
+            final String description = position.getDescription();
+            dos.writeUTF(description != null ? description : "");
         });
     }
 
@@ -137,24 +130,22 @@ public class DataStreamStrategy implements SerializationStrategy {
     private List<Organization.Position> readPositions(DataInputStream dis, int positionsCount) throws IOException {
         List<Organization.Position> positions = new ArrayList<>(positionsCount);
         for (int po = 0; po < positionsCount; po++) {
-            LocalDate[] positionDates = readPositionDates(dis);
+            LocalDate startDate = readPositionDate(dis);
+            LocalDate endDate = readPositionDate(dis);
             String title = dis.readUTF();
             String description = dis.readUTF();
             description = description.equals("") ? null : description;
-            positions.add(new Organization.Position(positionDates[0], positionDates[1], title, description));
+            positions.add(new Organization.Position(startDate, endDate, title, description));
         }
         return positions;
     }
 
-    private LocalDate[] readPositionDates(DataInputStream dis) throws IOException {
-        int startYear = dis.readInt();
-        Month startMonth = Month.valueOf(dis.readUTF());
-        int endYear = dis.readInt();
-        Month endMonth = Month.valueOf(dis.readUTF());
-        return new LocalDate[]{
-                DateUtil.of(startYear, startMonth), DateUtil.of(endYear, endMonth)
-        };
+    private LocalDate readPositionDate(DataInputStream dis) throws IOException {
+        int year = dis.readInt();
+        Month month = Month.valueOf(dis.readUTF());
+        return DateUtil.of(year, month);
     }
+
 
     private <T> void writeCollection(Collection<T> collection, DataOutputStream dos, ElementWriter<T> writer) throws IOException {
         dos.writeInt(collection.size());
