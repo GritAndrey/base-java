@@ -15,12 +15,8 @@ public class DataStreamStrategy implements SerializationStrategy {
         try (DataInputStream dis = new DataInputStream(is)) {
             Resume resume = new Resume(dis.readUTF(), dis.readUTF());
 
-            int contactsSize = dis.readInt();
-            resume.getContacts().putAll(readContacts(dis, contactsSize));
-
-            int sectionsSize = dis.readInt();
-            resume.getSections().putAll(readSections(dis, sectionsSize));
-
+            resume.getContacts().putAll(readContacts(dis));
+            resume.getSections().putAll(readSections(dis));
             return resume;
         }
     }
@@ -81,27 +77,22 @@ public class DataStreamStrategy implements SerializationStrategy {
         dos.writeUTF(localDate.getMonth().name());
     }
 
-    private Map<ContactType, String> readContacts(DataInputStream dis, int contactsSize) throws IOException {
+    private Map<ContactType, String> readContacts(DataInputStream dis) throws IOException {
         Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
-        for (int con = 0; con < contactsSize; con++) {
-            contacts.put(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-        }
+        readElements(dis, () -> contacts.put(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
         return contacts;
     }
 
-    private Map<SectionType, Section> readSections(DataInputStream dis, int sectionsSize) throws IOException {
+    private Map<SectionType, Section> readSections(DataInputStream dis) throws IOException {
         Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
-        for (int i = 0; i < sectionsSize; i++) {
+        readElements(dis, () -> {
             SectionType sectionType = SectionType.valueOf(dis.readUTF());
             switch (sectionType) {
                 case PERSONAL, OBJECTIVE -> sections.put(sectionType, new TextSection(dis.readUTF()));
                 case ACHIEVEMENT, QUALIFICATIONS -> sections.put(sectionType, new ListSection(readList(dis, dis::readUTF)));
-                case EXPERIENCE, EDUCATION -> {
-                    List<Organization> organizations = readOrganizations(dis);
-                    sections.put(sectionType, new OrganizationSection(organizations));
-                }
+                case EXPERIENCE, EDUCATION -> sections.put(sectionType, new OrganizationSection(readOrganizations(dis)));
             }
-        }
+        });
         return sections;
     }
 
@@ -132,7 +123,6 @@ public class DataStreamStrategy implements SerializationStrategy {
         return DateUtil.of(year, month);
     }
 
-
     private <T> void writeCollection(Collection<T> collection, DataOutputStream dos, ElementWriter<T> writer) throws IOException {
         dos.writeInt(collection.size());
         for (T element : collection) {
@@ -147,6 +137,17 @@ public class DataStreamStrategy implements SerializationStrategy {
             list.add(reader.read());
         }
         return list;
+    }
+
+    private void readElements(DataInputStream dis, ElementProcessor processor) throws IOException {
+        int mapSize = dis.readInt();
+        for (int i = 0; i < mapSize; i++) {
+            processor.process();
+        }
+    }
+
+    private interface ElementProcessor {
+        void process() throws IOException;
     }
 
     private interface ElementWriter<T> {
