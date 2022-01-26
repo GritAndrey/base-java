@@ -1,6 +1,6 @@
 package ru.javawebinar.basejava;
 
-public class DeadLock {
+public class MainDeadlock {
     private static final Object RESOURCE = new Object();
     private static final Object SECOND_RESOURCE = new Object();
 
