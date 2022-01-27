@@ -1,8 +1,18 @@
 package ru.javawebinar.basejava;
 
 public class MainDeadlock {
-    private static final Object RESOURCE = new Object();
-    private static final Object SECOND_RESOURCE = new Object();
+    private static final Object RESOURCE = new Object(){
+        @Override
+        public String toString() {
+            return "Resource";
+        }
+    };
+    private static final Object SECOND_RESOURCE = new Object(){
+        @Override
+        public String toString() {
+            return "second Resource";
+        }
+    };
 
     public static void main(String[] args) {
 
