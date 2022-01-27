@@ -7,38 +7,25 @@ public class MainDeadlock {
     public static void main(String[] args) {
 
 
-        new Thread(() -> {
-            System.out.println("Thread" + Thread.currentThread().getName() + " is running");
-            try {
-                synchronized (RESOURCE) {
-                    System.out.println(Thread.currentThread().getName() + " hold RESOURCE");
-                    Thread.sleep(10);
-                    System.out.println(Thread.currentThread().getName() + ": Need SECOND_RESOURCE");
-                    synchronized (SECOND_RESOURCE) {
-                        System.out.println("Thread" + Thread.currentThread().getName() + " hold ALL");
-                    }
-                }
+        new Thread(() -> makeDeadLock(RESOURCE, SECOND_RESOURCE)).start();
 
+        new Thread(() -> makeDeadLock(SECOND_RESOURCE, RESOURCE)).start();
+    }
+
+    private static void makeDeadLock(Object o, Object o1) {
+        System.out.println(Thread.currentThread().getName() + " is running");
+
+        synchronized (o) {
+            System.out.println("Thread" + Thread.currentThread().getName() + " hold " + o);
+            try {
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }).start();
-
-        new Thread(() -> {
-            System.out.println(Thread.currentThread().getName() + " is running");
-            try {
-                synchronized (SECOND_RESOURCE) {
-                    System.out.println("Thread" + Thread.currentThread().getName() + " hold SECOND_RESOURCE");
-                    Thread.sleep(10);
-                    System.out.println(Thread.currentThread().getName() + ": Need RESOURCE");
-                    synchronized (RESOURCE) {
-                        System.out.println(Thread.currentThread().getName() + " hold ALL");
-                    }
-                }
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            System.out.println(Thread.currentThread().getName() + ": need " + o1);
+            synchronized (o1) {
+                System.out.println(Thread.currentThread().getName() + " hold ALL");
             }
-        }).start();
+        }
     }
 }
