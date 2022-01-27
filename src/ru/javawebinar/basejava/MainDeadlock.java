@@ -1,13 +1,13 @@
 package ru.javawebinar.basejava;
 
 public class MainDeadlock {
-    private static final Object RESOURCE = new Object(){
+    private static final Object RESOURCE = new Object() {
         @Override
         public String toString() {
             return "Resource";
         }
     };
-    private static final Object SECOND_RESOURCE = new Object(){
+    private static final Object SECOND_RESOURCE = new Object() {
         @Override
         public String toString() {
             return "second Resource";
@@ -15,7 +15,6 @@ public class MainDeadlock {
     };
 
     public static void main(String[] args) {
-
 
         new Thread(() -> makeDeadLock(RESOURCE, SECOND_RESOURCE)).start();
 
@@ -26,7 +25,7 @@ public class MainDeadlock {
         System.out.println(Thread.currentThread().getName() + " is running");
 
         synchronized (o) {
-            System.out.println("Thread" + Thread.currentThread().getName() + " hold " + o);
+            System.out.println(Thread.currentThread().getName() + " hold " + o);
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
