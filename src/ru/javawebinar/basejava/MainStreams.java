@@ -20,8 +20,9 @@ public class MainStreams {
     }
 
     public static List<Integer> oddOrEven(List<Integer> integers) {
+        int sum = integers.stream().reduce(Integer::sum).orElseThrow() ;
         return integers.stream()
-                .filter(i -> i % 2 != integers.stream().reduce(Integer::sum).get() % 2)
+                .filter(i -> i % 2 != sum % 2)
                 .collect(Collectors.toList());
     }
 }
