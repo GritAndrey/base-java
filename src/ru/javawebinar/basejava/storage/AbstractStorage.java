@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class AbstractStorage<SK> implements Storage {
-    private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
+    private static final Logger log = Logger.getLogger(AbstractStorage.class.getName());
 
     @Override
     public void update(Resume r) {
-        LOG.info("Update " + r);
+        log.info("Update " + r);
         Objects.requireNonNull(r);
         SK key = getExistedKey(r.getUuid());
         makeUpdate(key, r);
@@ -23,7 +23,7 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     @Override
     public void save(Resume r) {
-        LOG.info("Save " + r);
+        log.info("Save " + r);
         Objects.requireNonNull(r);
         SK key = getNotExistedKey(r.getUuid());
         makeSave(key, r);
@@ -31,14 +31,14 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        LOG.info("Get " + uuid);
+        log.info("Get " + uuid);
         SK key = getExistedKey(uuid);
         return makeGet(key);
     }
 
     @Override
     public void delete(String uuid) {
-        LOG.info("Delete " + uuid);
+        log.info("Delete " + uuid);
         SK key = getExistedKey(uuid);
         makeDelete(key);
     }
@@ -48,7 +48,7 @@ public abstract class AbstractStorage<SK> implements Storage {
         SK key = getKey(uuid);
         if (isExist(key)) {
             ExistStorageException existStorageException = new ExistStorageException(uuid);
-            LOG.warning(existStorageException.getMessage());
+            log.warning(existStorageException.getMessage());
             throw existStorageException;
         }
         return key;
@@ -59,7 +59,7 @@ public abstract class AbstractStorage<SK> implements Storage {
         SK key = getKey(uuid);
         if (!isExist(key)) {
             NotExistStorageException notExistStorageException = new NotExistStorageException(uuid);
-            LOG.warning(notExistStorageException.getMessage());
+            log.warning(notExistStorageException.getMessage());
             throw notExistStorageException;
         }
         return key;
@@ -67,7 +67,7 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        LOG.info("getAllSorted");
+        log.info("getAllSorted");
         return getStorageStream()
                 .sorted()
                 .collect(Collectors.toList());

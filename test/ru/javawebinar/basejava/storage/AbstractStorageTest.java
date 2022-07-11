@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.get().getStorageDir();
@@ -27,10 +27,10 @@ public abstract class AbstractStorageTest {
     private static final Resume R4;
 
     static {
-        R1 = ResumeTestData.generateResume(UUID_1, "Name1");
-        R2 = ResumeTestData.generateResume(UUID_2, "Name2");
-        R3 = ResumeTestData.generateResume(UUID_3, "Name3");
-        R4 = ResumeTestData.generateResume(UUID_4, "Name4");
+         R1 = ResumeTestData.generateResume(UUID_1, "Name1");
+         R2 = ResumeTestData.generateResume(UUID_2, "Name2");
+         R3 = ResumeTestData.generateResume(UUID_3, "Name3");
+         R4 = ResumeTestData.generateResume(UUID_4, "Name4");
     }
 
     protected final Storage storage;
