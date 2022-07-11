@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class SqlStorage implements Storage {
-    private static Logger log = Logger.getLogger(AbstractStorage.class.getName());
+    private static final Logger log = Logger.getLogger(AbstractStorage.class.getName());
     public final SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
