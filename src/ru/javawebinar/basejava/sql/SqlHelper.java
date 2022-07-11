@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.sql;
 
+import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 
 import java.sql.Connection;
@@ -18,6 +19,10 @@ public class SqlHelper {
              PreparedStatement ps = conn.prepareStatement(query)) {
             return sqlExecutor.execute(ps);
         } catch (SQLException e) {
+            // https://www.postgresql.org/docs/current/errcodes-appendix.html
+            if ("23505".equals(e.getSQLState())) {
+                throw new ExistStorageException(null);
+            }
             throw new StorageException(e);
         }
     }

@@ -7,6 +7,7 @@ import ru.javawebinar.basejava.sql.SqlHelper;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -27,6 +28,14 @@ public class SqlStorage implements Storage {
     @Override
     public void update(Resume r) {
         log.info("Update: " + r);
+        sqlHelper.execute("UPDATE resume SET full_name=? WHERE uuid=?", statement -> {
+            statement.setString(1, r.getFullName());
+            statement.setString(2, r.getUuid());
+            if (statement.executeUpdate() == 0) {
+                throw new NotExistStorageException(r.getUuid());
+            }
+            return null;
+        });
     }
 
     @Override
@@ -57,12 +66,26 @@ public class SqlStorage implements Storage {
     @Override
     public void delete(String uuid) {
         log.info("Delete resume with uuid: " + uuid);
+        sqlHelper.<Void>execute("DELETE FROM resume r WHERE r.uuid =? ", statement -> {
+            statement.setString(1, uuid);
+            final int rows = statement.executeUpdate();
+            if (rows == 0)
+                throw new NotExistStorageException(uuid);
+            return null;
+        });
     }
 
     @Override
     public List<Resume> getAllSorted() {
         log.info("Get all resumes");
-        return null;
+        return sqlHelper.execute("SELECT * FROM resume r ORDER BY full_name, uuid", ps -> {
+            ResultSet rs = ps.executeQuery();
+            List<Resume> resumes = new ArrayList<>();
+            while (rs.next()) {
+                resumes.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
+            }
+            return resumes;
+        });
     }
 
     @Override
