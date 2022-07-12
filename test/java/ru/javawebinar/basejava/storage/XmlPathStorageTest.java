@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.storage.PathStorage;
 import ru.javawebinar.basejava.storage.strategy.XmlStreamStrategy;
 
 public class XmlPathStorageTest extends AbstractStorageTest {
