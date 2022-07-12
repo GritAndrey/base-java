@@ -82,6 +82,10 @@ public class Resume implements Comparable<Resume>, Serializable {
         sections.put(type, section);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, fullName, contacts, sections);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -92,11 +96,6 @@ public class Resume implements Comparable<Resume>, Serializable {
                 && fullName.equals(resume.fullName)
                 && Objects.equals(contacts, resume.contacts)
                 && Objects.equals(sections, resume.sections);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(uuid, fullName, contacts, sections);
     }
 
     @Override

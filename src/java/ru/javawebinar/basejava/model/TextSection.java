@@ -25,8 +25,8 @@ public class TextSection extends Section {
     }
 
     @Override
-    public String toString() {
-        return content;
+    public int hashCode() {
+        return Objects.hash(content);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class TextSection extends Section {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(content);
+    public String toString() {
+        return content;
     }
 }

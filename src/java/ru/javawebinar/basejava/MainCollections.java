@@ -2,7 +2,10 @@ package ru.javawebinar.basejava;
 
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -10,7 +13,7 @@ public class MainCollections {
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
-    private static final Resume r1 = new Resume(UUID_1,"Name1");
+    private static final Resume r1 = new Resume(UUID_1, "Name1");
     private static final Resume r2 = new Resume(UUID_2, "Name2");
     private static final Resume r3 = new Resume(UUID_3, "Name3");
 

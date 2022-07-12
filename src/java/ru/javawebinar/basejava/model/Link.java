@@ -32,8 +32,8 @@ public class Link implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return name + ", " + url;
+    public int hashCode() {
+        return Objects.hash(name, url);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Link implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(name, url);
+    public String toString() {
+        return name + ", " + url;
     }
 }

@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 public class FileStorage extends AbstractStorage<File> {
     private final File storageDir;
-    private SerializationStrategy strategy;
+    private final SerializationStrategy strategy;
 
     protected FileStorage(File storageDir, SerializationStrategy strategy) {
         Objects.requireNonNull(storageDir, "Directory must not be null");
@@ -33,6 +33,12 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     public int size() {
         return getFilesList().length;
+    }
+
+    @Override
+    protected Stream<Resume> getStorageStream() {
+        return Arrays.stream(getFilesList()).map(this::makeGet);
+
     }
 
     @Override
@@ -66,13 +72,6 @@ public class FileStorage extends AbstractStorage<File> {
     }
 
     @Override
-    protected void makeDelete(File key) {
-        if (!key.delete()) {
-            throw new StorageException("Can`t delete file", key.getName());
-        }
-    }
-
-    @Override
     protected Resume makeGet(File key) {
         try {
             return strategy.read(new BufferedInputStream(new FileInputStream(key)));
@@ -82,9 +81,10 @@ public class FileStorage extends AbstractStorage<File> {
     }
 
     @Override
-    protected Stream<Resume> getStorageStream() {
-        return Arrays.stream(getFilesList()).map(this::makeGet);
-
+    protected void makeDelete(File key) {
+        if (!key.delete()) {
+            throw new StorageException("Can`t delete file", key.getName());
+        }
     }
 
     private File[] getFilesList() {

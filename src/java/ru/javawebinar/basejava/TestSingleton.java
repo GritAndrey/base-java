@@ -7,15 +7,15 @@ import java.util.stream.Stream;
 public class TestSingleton {
     private static TestSingleton instance;
 
+    private TestSingleton() {
+    }
+
     @SuppressWarnings("InstantiationOfUtilityClass")
     public static TestSingleton getInstance() {
         if (instance == null) {
             instance = new TestSingleton();
         }
         return instance;
-    }
-
-    private TestSingleton() {
     }
 
     public static void main(String[] args) {

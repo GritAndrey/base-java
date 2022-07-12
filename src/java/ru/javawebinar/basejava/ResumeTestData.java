@@ -4,14 +4,17 @@ import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.model.Section;
 import ru.javawebinar.basejava.model.SectionType;
+import ru.javawebinar.basejava.storage.Storage;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.UUID;
 
 public class ResumeTestData {
     public static void main(String[] args) {
-        Resume resume = generateResume("testUuid", "testName");
-
+        Resume resume = generateResume(UUID.randomUUID().toString(), "testName");
+        Storage storage = Config.get().getSqlStorage();
+        storage.save(resume);
         System.out.println(resume.getFullName());
         resume.getContacts().forEach((contact, contactValue) -> {
             System.out.print(contact.getContactType() + ": ");

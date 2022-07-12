@@ -7,7 +7,7 @@ import java.time.Month;
 import java.util.NoSuchElementException;
 
 public class SectionFactory {
-    private SectionType sectionType;
+    private final SectionType sectionType;
 
     public SectionFactory(SectionType sectionType) {
         this.sectionType = sectionType;

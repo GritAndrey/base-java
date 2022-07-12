@@ -43,6 +43,14 @@ public abstract class AbstractStorage<SK> implements Storage {
         makeDelete(key);
     }
 
+    @Override
+    public List<Resume> getAllSorted() {
+        log.info("getAllSorted");
+        return getStorageStream()
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
     private SK getNotExistedKey(String uuid) {
         Objects.requireNonNull(uuid);
         SK key = getKey(uuid);
@@ -63,14 +71,6 @@ public abstract class AbstractStorage<SK> implements Storage {
             throw notExistStorageException;
         }
         return key;
-    }
-
-    @Override
-    public List<Resume> getAllSorted() {
-        log.info("getAllSorted");
-        return getStorageStream()
-                .sorted()
-                .collect(Collectors.toList());
     }
 
     protected abstract Stream<Resume> getStorageStream();

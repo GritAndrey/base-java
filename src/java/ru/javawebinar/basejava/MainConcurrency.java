@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainConcurrency {
-    private static final Object LOCK = new Object();
     public static final int THREADS_NUMBER = 10000;
+    private static final Object LOCK = new Object();
     private static int counter;
 
     public static void main(String[] args) throws InterruptedException {
@@ -33,7 +33,7 @@ public class MainConcurrency {
             thread.start();
             threads.add(thread);
         }
-        threads.forEach(thr-> {
+        threads.forEach(thr -> {
             try {
                 thr.join();
             } catch (InterruptedException e) {
@@ -44,6 +44,6 @@ public class MainConcurrency {
     }
 
     private synchronized void inc() {
-            counter++;
+        counter++;
     }
 }

@@ -20,6 +20,11 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     }
 
     @Override
+    protected Stream<Resume> getStorageStream() {
+        return storage.values().stream();
+    }
+
+    @Override
     protected boolean isExist(Resume key) {
         return key != null;
     }
@@ -47,10 +52,5 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     @Override
     protected void makeDelete(Resume key) {
         storage.remove(key.getUuid());
-    }
-
-    @Override
-    protected Stream<Resume> getStorageStream() {
-        return storage.values().stream();
     }
 }

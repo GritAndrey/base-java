@@ -24,6 +24,19 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
         return this.size;
     }
 
+    private boolean checkCapacity() {
+        return size < STORAGE_LIMIT;
+    }
+
+    protected abstract void add(Resume r, int index);
+
+    protected abstract int getIndex(String uuid);
+
+    @Override
+    protected Stream<Resume> getStorageStream() {
+        return Arrays.stream(storage).limit(size);
+    }
+
     @Override
     protected boolean isExist(Integer key) {
         return key >= 0;
@@ -48,8 +61,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
         size++;
     }
 
-    private boolean checkCapacity() {
-        return size < STORAGE_LIMIT;
+    @Override
+    protected Resume makeGet(Integer key) {
+        return storage[key];
     }
 
     @Override
@@ -57,19 +71,5 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
         int index = key;
         System.arraycopy(storage, index + 1, storage, index, size - index - 1);
         size--;
-    }
-
-    @Override
-    protected Resume makeGet(Integer key) {
-        return storage[key];
-    }
-
-    protected abstract void add(Resume r, int index);
-
-    protected abstract int getIndex(String uuid);
-
-    @Override
-    protected Stream<Resume> getStorageStream() {
-        return Arrays.stream(storage).limit(size);
     }
 }

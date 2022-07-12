@@ -28,15 +28,15 @@ public class ListSection extends Section {
         return items;
     }
 
-    @Override
-    public String toString() {
-        return items.toString();
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public Stream<String> getContent() {
         return items.stream();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(items);
     }
 
     @Override
@@ -48,8 +48,8 @@ public class ListSection extends Section {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(items);
+    public String toString() {
+        return items.toString();
     }
 
 }

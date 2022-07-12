@@ -21,6 +21,11 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
+    protected Stream<Resume> getStorageStream() {
+        return storage.stream();
+    }
+
+    @Override
     protected boolean isExist(Integer key) {
         return key >= 0;
     }
@@ -50,10 +55,5 @@ public class ListStorage extends AbstractStorage<Integer> {
     @Override
     protected void makeDelete(Integer key) {
         storage.remove((int) key);
-    }
-
-    @Override
-    protected Stream<Resume> getStorageStream() {
-        return storage.stream();
     }
 }

@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
     private final Path storageDir;
-    private SerializationStrategy strategy;
+    private final SerializationStrategy strategy;
 
     protected PathStorage(String dir, SerializationStrategy strategy) {
         storageDir = Paths.get(dir);
@@ -34,6 +34,11 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     public int size() {
         return (int) getFilesList().count();
+    }
+
+    @Override
+    protected Stream<Resume> getStorageStream() {
+        return getFilesList().map(this::makeGet);
     }
 
     @Override
@@ -61,15 +66,6 @@ public class PathStorage extends AbstractStorage<Path> {
     }
 
     @Override
-    protected void makeDelete(Path key) {
-        try {
-            Files.delete(key);
-        } catch (IOException e) {
-            throw new StorageException("Can`t delete file", key.getFileName().toString(), e);
-        }
-    }
-
-    @Override
     protected Resume makeGet(Path key) {
         try {
             return strategy.read(new BufferedInputStream(Files.newInputStream(key)));
@@ -79,8 +75,12 @@ public class PathStorage extends AbstractStorage<Path> {
     }
 
     @Override
-    protected Stream<Resume> getStorageStream() {
-        return getFilesList().map(this::makeGet);
+    protected void makeDelete(Path key) {
+        try {
+            Files.delete(key);
+        } catch (IOException e) {
+            throw new StorageException("Can`t delete file", key.getFileName().toString(), e);
+        }
     }
 
     private Stream<Path> getFilesList() {

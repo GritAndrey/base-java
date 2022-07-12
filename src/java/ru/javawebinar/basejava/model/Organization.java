@@ -53,16 +53,16 @@ public class Organization implements Serializable {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(homePage, positions);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Organization that = (Organization) o;
         return Objects.equals(homePage, that.homePage) && Objects.equals(positions, that.positions);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(homePage, positions);
     }
 
     @Override
@@ -119,6 +119,11 @@ public class Organization implements Serializable {
         }
 
         @Override
+        public int hashCode() {
+            return Objects.hash(startDate, endDate, description, title);
+        }
+
+        @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
@@ -127,11 +132,6 @@ public class Organization implements Serializable {
                     && endDate.equals(position.endDate)
                     && Objects.equals(description, position.description)
                     && title.equals(position.title);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(startDate, endDate, description, title);
         }
 
         @Override

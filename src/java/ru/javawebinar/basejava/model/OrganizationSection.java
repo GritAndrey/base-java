@@ -32,16 +32,16 @@ public class OrganizationSection extends Section {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(organizations);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrganizationSection that = (OrganizationSection) o;
         return organizations.equals(that.organizations);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(organizations);
     }
 
     @Override
