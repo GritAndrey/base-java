@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="ru.javawebinar.basejava.model.ContactType" %>
 <html>
 <jsp:include page="fragments/headTag.jsp"/>
 <body>
@@ -11,14 +12,15 @@
         <thead>
         <tr>
             <th>UUID</th>
-            <th>Full name</th>
+            <th>E-mail</th>
         </tr>
         </thead>
         <c:forEach items="${requestScope.resumes}" var="resume">
             <tr>
                 <jsp:useBean id="resume" type="ru.javawebinar.basejava.model.Resume"/>
-                <td>"${resume.uuid}"</td>
-                <td>"${resume.fullName}"</td>
+                <td><a href="${pageContext.request.contextPath}?uuid=${resume.uuid}">${resume.fullName}</a></td>
+                <td><a href="mailto:<%=resume.getContacts(ContactType.MAIL)%>"><%=resume.getContacts(ContactType.MAIL)%>
+                </a></td>
             </tr>
         </c:forEach>
     </table>
