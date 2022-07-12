@@ -4,7 +4,6 @@ import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.model.Section;
 import ru.javawebinar.basejava.model.SectionType;
-import ru.javawebinar.basejava.storage.Storage;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -13,8 +12,6 @@ import java.util.UUID;
 public class ResumeTestData {
     public static void main(String[] args) {
         Resume resume = generateResume(UUID.randomUUID().toString(), "testName");
-        Storage storage = Config.get().getSqlStorage();
-        storage.save(resume);
         System.out.println(resume.getFullName());
         resume.getContacts().forEach((contact, contactValue) -> {
             System.out.print(contact.getContactType() + ": ");
@@ -38,11 +35,11 @@ public class ResumeTestData {
         resumeContacts.put(ContactType.MOBILE, "7654321");
         resumeContacts.put(ContactType.HOME_PHONE, "123-123-12");
         resumeContacts.put(ContactType.SKYPE, "skype_number");
-        resumeContacts.put(ContactType.MAIL, "somemail@mail.ru");
+        resumeContacts.put(ContactType.MAIL, "somemail@mail.com");
         resumeContacts.put(ContactType.LINKEDIN, "linkedin page");
         resumeContacts.put(ContactType.GITHUB, "github page");
         resumeContacts.put(ContactType.STACKOVERFLOW, "stackoverflow profile");
-        resumeContacts.put(ContactType.HOME_PAGE, "домашняя страница");
+        resumeContacts.put(ContactType.HOME_PAGE, "HomePage");
 
         Arrays.stream(SectionType.values()).forEach(sectionType -> {
             resumeSections.put(sectionType, new SectionFactory(sectionType).getSection());
