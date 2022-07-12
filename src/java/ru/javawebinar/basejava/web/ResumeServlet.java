@@ -12,12 +12,11 @@ import java.io.IOException;
 import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
-    private Storage storage;
+    private final Storage storage = Config.get().getSqlStorage();
 
     @Override
     public void init() throws ServletException {
         super.init();
-        storage = Config.get().getSqlStorage();
     }
 
     @Override
