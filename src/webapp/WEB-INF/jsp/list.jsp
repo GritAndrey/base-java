@@ -13,14 +13,21 @@
         <tr>
             <th>UUID</th>
             <th>E-mail</th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>
         <c:forEach items="${requestScope.resumes}" var="resume">
             <tr>
                 <jsp:useBean id="resume" type="ru.javawebinar.basejava.model.Resume"/>
-                <td><a href="${pageContext.request.contextPath}?uuid=${resume.uuid}">${resume.fullName}</a></td>
-                <td><a href="mailto:<%=resume.getContacts(ContactType.MAIL)%>"><%=resume.getContacts(ContactType.MAIL)%>
-                </a></td>
+                <td>
+                    <a href="resume?uuid=${resume.uuid}&action=view">${resume.fullName}</a>
+                </td>
+                <c:set var="mail" scope="session" value="${resume.getContacts(ContactType.MAIL)}"/>
+                <td><a href="mailto:">${mail}</a>
+
+                <td><a href="resume?uuid=${resume.uuid}&action=delete"><img src="img/delete.png" alt="delete"></a></td>
+                <td><a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/pencil.png" alt="edit"></a></td>
             </tr>
         </c:forEach>
     </table>
